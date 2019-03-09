@@ -1,0 +1,42 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">用户留言</a></li>
+		</ul>
+
+		<table class="table table-hover table-bordered margin-top-20">
+			<thead>
+				<tr>
+					<th></th>
+					<th align="left">用户</th>
+					<th align="left">内容</th>
+					<th align="left">图片</th>
+					<th align="left">时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="list" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td><a href="javascript:parent.openIframeLayer('{:url('gxzh/userinfo',['id'=>$vo['uid']])}','',{area: ['800px', '800px'],end:function(){ location.reload(); }});">{$vo.user_nickname}</a></td>
+					<td>{$vo.contents}</td>
+					<td>
+						<?php if($vo['imgs'][0]){ foreach($vo['imgs'] as $v){ ?>
+							<a href="javascript:parent.imagePreviewDialog('{$v}');">
+								<i class="fa fa-photo fa-fw"></i>
+							</a>
+						<?php }} ?>
+					</td>
+					<td><?php echo date('Y-m-d H:i:s',$vo['created_at']); ?></td>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

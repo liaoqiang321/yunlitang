@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>XST-app</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="keywords" content="test" />
+    <meta name="description" content="test" />
+    <meta name="author" content="XST-APP" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style type="text/css">
+        .speak_window {
+            overflow-y: scroll;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 50px;
+            left: 0;
+        }
+
+        .speak_box {
+            margin-bottom: 70px;
+            padding: 10px;
+        }
+
+        .question, .answer {
+            margin-bottom: 1rem;
+        }
+
+        .question {
+            text-align: right;
+        }
+
+        .question > div {
+            display: inline-block;
+        }
+
+        .left {
+            float: left;
+            clear: right;
+            margin-bottom: 1rem
+        }
+
+        .right {
+            float: right;
+            clear: right;
+            margin-bottom: 1rem
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .question_text, .answer_text {
+            box-sizing: border-box;
+            position: relative;
+            display: table-cell;
+            min-height: 60px;
+        }
+
+
+        .question_text p, .answer_text p {
+            padding: .5rem 1rem;
+            font-size: 14px;
+            line-height: 25px;
+            box-sizing: border-box;
+            vertical-align: middle;
+            display: table-cell;
+            word-wrap: break-word;
+            color: #fff;
+        }
+
+        .answer_text p {
+            background: #f3f3f3;
+            color: #555;
+            border-radius: 0 10px 0 0;
+        }
+
+        .question_text p {
+            background: #6bce73;
+            border-radius: 10px 0 0 0;
+            text-align: left;
+        }
+
+        .write_list {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border-top: solid 1px #ddd;
+            padding: 5px;
+            line-height: 30px;
+        }
+
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+
+<body>
+<!--header start-->
+<header style=" position:relative; z-index:9; display: flex; align-items:center; padding: 12px; background:#6bce73; color:#fff;" id="header">
+    <label onClick="goBack()" style="flex:1;">
+        <i class="icon iconfont">&#xe605;</i>
+    </label>
+    <div style="flex:3; text-align:center; font-size:1.4rem;">
+        聊天室
+    </div>
+    <div style="flex:1; text-align:right; position:relative; color:#fff" onClick="end()">
+        结束
+    </div>
+</header>
+<!--header end-->
+
+<!-- 对话内容 -->
+<div class="speak_window" style=" padding-bottom:30px;">
+    <div class="speak_box">
+
+    </div>
+</div>
+
+<!-- 内容输入-->
+<div style=" display:flex; align-items:center; position:fixed; width:100%; bottom:0; border-top:#ebebeb 1px solid; padding: 12px 12px 0; background:#fff;">
+    <input type="text" id="content" class="left" maxlength="50" placeholder="请输入..." style="flex:5; border:#f3f3f3 1px solid; padding:12px; outline:none; border-radius:4px;" />
+    <span onClick="send()" style="flex:1; background:#448ccb; padding: 11px 12px; text-align:center; color:#fff; position:relative; top:-6px; left:-4px">发送</span>
+</div>
+
+<input type="hidden" name="myemail" id="myemail" value="20" />
+<input type="hidden" name="mynickname" id="mynickname" value="{$mynickname}" />
+<input type="hidden" name="myavatar" id="myavatar" value="{$myavatar}" />
+<input type="hidden" name="toemail" id="toemail" value="50" />
+<input type="hidden" name="order_id" id="order_id" value="5" />
+<input type="hidden" name="tonickname" id="tonickname" value="{$tonickname}" />
+<input type="hidden" name="toavatar" id="toavatar" value="{$toavatar}" />
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = $api.byId('header');
+        //适配iOS 7+，Android 4.4+状态栏
+        $api.fixStatusBar(header);
+
+        api.setStatusBarStyle({
+            style: 'header',
+            color: '#6bce73'
+        });
+        $("#myemail").val(api.pageParam.from);
+        $("#toemail").val(api.pageParam.to);
+        $("#order_id").val(api.pageParam.order_id);
+    }
+    if ("WebSocket" in window) {
+        var ws = new WebSocket("ws://47.106.225.32:1007");
+        ws.onopen = function() {
+            console.log("握手成功");
+            var myemail = $("#myemail").val();
+            var toemail = $("#toemail").val();
+            var order_id = $("#order_id").val();
+            var arr = {
+                "flag": "init",
+                "from": myemail,
+                "to": toemail,
+                'order_id': order_id
+            };
+            var str = JSON.stringify(arr);
+            ws.send(str);
+        };
+        ws.onmessage = function(e) {
+            var toemail = $("#toemail").val();
+            var toavatar = $("#toavatar").val();
+            var obj = JSON.parse(e.data);
+            console.log(e.data);
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].from === toemail) {
+                    var ans = '<div class="answer">';
+                    ans += '<div class="answer_text"><p>' + obj[i].content + '</p>';
+                    ans += '</div></div>';
+                    $('.speak_box').append(ans);
+                } else {
+                    var str = '<div class="question">';
+                    str += '<div class="question_text clear"><p>' + obj[i].content + '</p>';
+                    str += '</div></div>';
+                    $('.speak_box').append(str);
+
+                }
+            }
+            //但同时与两个人聊天时，可能两个人的消息都会出现在当前窗口，所以此处加个判断，此窗口只接收当前聊天对象的消息，其他则忽略
+            if (obj.from === toemail) {
+                var ans = '<div class="answer">';
+                ans += '<div class="answer_text"><p>' + obj.content + '</p>';
+                ans += '</div></div>';
+                $('.speak_box').append(ans);
+                for_bottom();
+            }
+        };
+        ws.onerror = function() {
+            console.log("error");
+            var str = '<div class="question">';
+            str += '<div class="question_text clear"><p>聊天服务器出现异常，暂时无法提供服务。</p><i></i>';
+            str += '</div></div>';
+            $('.speak_box').append(str);
+            $('#content').val('');
+            $('##content').focus();
+            autoWidth();
+            for_bottom();
+        };
+
+        function send() {
+            var content = $('#content').val();
+            if (content === '') {
+                api.toast({
+                    msg: '请输入消息！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+                $('#content').focus();
+            } else {
+                var toemail = $("#toemail").val();
+                var myemail = $("#myemail").val();
+                var order_id = $("#order_id").val();
+                var myavatar = $("#myavatar").val();
+                var arr = {
+                    "flag": "msg",
+                    "to": toemail,
+                    "from": myemail,
+                    "content": content,
+                    "order_id": order_id
+                };
+                var msg = JSON.stringify(arr);
+                console.log(msg);
+                ws.send(msg);
+                var str = '<div class="question">';
+                str += '<div class="question_text clear"><p>' + content + '</p>';
+                str += '</div></div>';
+                $('.speak_box').append(str);
+                $('#content').val('');
+                $('#content').focus();
+                autoWidth();
+                for_bottom();
+            }
+
+        }
+    } else {
+        alert("您的浏览器不支持 WebSocket!");
+    }
+
+    function for_bottom() {
+        var speak_height = $('.speak_box').height();
+        $('.speak_box,.speak_window').animate({
+            scrollTop: speak_height
+        }, 500);
+    }
+
+    function autoWidth() {
+        $('.question_text').css('max-width', $('.question').width() - 60);
+    }
+
+    autoWidth();
+
+    function goBack(){
+        api.closeWin();
+
+    }
+    function end(){
+        $.ajax({
+            headers:{
+                token: $api.getStorage('token')
+
+            },
+            type:'get',
+            url: url+'m1/order/end-chat',
+            data:{
+                id:api.pageParam.order_id
+            },
+            success:function(data){
+
+                api.toast({
+                    msg: data.msg,
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+                setTimeout(function(){
+                    api.openWin({
+                        name: 'comment',
+                        url: './comment.html',
+                        pageParam: {
+                            name: 'comment',
+                            id:api.pageParam.order_id,
+                            realname:data.data.realname,
+                            headimgurl:data.data.headimgurl,
+                            families_one:data.data.families_one
+                        }
+                    });
+
+                },1000)
+
+                console.log(JSON.stringify(data))
+            }
+        })
+    }
+</script>
+
+</body>
+
+</html>

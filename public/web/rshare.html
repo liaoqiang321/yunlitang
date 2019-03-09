@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0 , maximum-scale=1.0, user-scalable=0" />
+    <title>注册</title>
+    <style>
+        * {
+            margin:0;
+            padding:0
+        }
+        body {
+            background:#f8f8f8;
+        }
+        .box {
+            position:absolute;left:50%; top:50%; transform:translate(-50%,-50%); width:80%;
+        }
+        .box h3 {
+            font-weight:700;
+            color:#6bce73;
+            font-size:20px;
+            text-align: center;
+            margin-bottom:20px;
+        }
+        .item {
+            display:block; position:relative; margin-bottom:20px;
+        }
+        .item img {
+            width:18px; position:absolute; top: 15px; left:10px;
+        }
+        .item img.user{
+
+        }
+        .item input {
+            padding:15px 0; border:#ccc 1px solid; border-radius:4px; width:100%; text-indent:35px; outline:none;
+        }
+        .btn {
+            background:rgba(107,206,115,1);
+            padding: 9px 10px;
+            text-align:center;
+            border-radius:4px;
+            color:#fff;
+        }
+        .btn:active {
+            background:rgba(107,206,115,.5);
+        }
+        .get-code {
+            position:absolute; right:-2px; top:0; padding: 13px 10px; background:#6bce73; color:#fff; border-radius:0 4px 4px 0;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+</head>
+
+<body>
+<div class="box">
+	<div style="text-align: center;">
+		<img src="https://app.insistcn.cn/web/logo.png" width="60" />
+		<h2 style="padding: 12px; font-size: 20px; color: rgb(7,135,254);">共享智慧</h2>
+	</div>
+    <h3>注册</h3>
+    <div class="item">
+        <img class="user" src="data:image/png;base64,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" />
+        <input type="text" placeholder="请输入手机号码" name="mobile" />
+    </div>
+    <div class="item">
+        <img src="data:image/png;base64,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" />
+        <input type="text" placeholder="请输入验证码" name="mobilepass" />
+        <span class="get-code" style="" or="0">获取验证码</span>
+    </div>
+    <div class="item">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAEdklEQVR4Xu2djZENQRCA+yJABIgAESACRIAIEAEiQASIABEgAkSACBAB9dXNVu319cy+nenZH6+7StWVe9Nv5pue7p7e2bkT2Y7cFJFbInJdRC6mn3XvPonIbxH5KiL8/HkL3T9ZuRN3ROSBiNxt6Md7EXkjIh8adDQ1XQMiVnZfRB6LyJWm3p9t/ENEniWYWOtisjRE4L1My7XXIAH4UESw0EVkKYhY37uMnysN9FvygbS/NpMIPvNeaj+z6byPLwGRYAFAQJQEn8bA+UfgyAmBB534UYJRSbBKQKKzm/SGSNB4Xej9z+THWHo1foyJASa+8HLhe1jeBJ8u0hNiCeCf5BsZvJegi2B1IaOwG8heEEsAWbb8vsbypoBjmVgcqZMlXUD2gIi/+pgZxKtkLVMwWn9PBvAoo+TGhM+d/d3eELGE75kg0sUKCiPOrQbySUC6rQRviERha/exNMCBbQ4kgYyo7SKeEHPLeKklnAOCjyTJ13LbK/XxhMgy1ts4CgTAXVvIE3VOybK+6tExL4jWsiGNITGms2sLk8ska3FxM14QvyRg404+T0nw2gCH7yePfKo6w86IINMkHhCxNiCOBStk9t0iYNMoTxuTObAqdDLenPJ4QLRysq1ZYckamwOfB0QroDTProPlWSqsVdMcYFohWg6booJnsdWbJ9B0sYIoXR0AWyGSWJNgj6V5eXhTU/os90PiXV3EbYVoRTy3JLYTTGvim3x4K0RmT1dMtg7R2lm9TZWlqnlrhWjtBC5tLLXRYCw/3rSz6gGxVWeVNcxs9Fd9PiDOBMjHA2IFNN0kIAZEBwIOKsIS9wqRCghFTfaeY6GOqLd4no9BHXiZKnQf2fLp59KUyQ46JHVIOkINjue5UycYeg14Tb2U8gDOVjYrUxA5vYC1HbtgpVTBTSlBLD27PUao2cJKDmLumcQxwhuP2SyZ5SBaVkjJH9/Ifrm69raDWcCAKFLAQD9KMK0xB9EqLGy1Wt1rXqwquLnHzkH8paLx1qvVvUDqKjjRmirVGclBdM3oe41wAb3WijzHLCCWZyIgOlhqQAyIDgQcVIQlBkQHAg4qwhIDogMBBxVhiQHxtAj8IhUDsIgnKxwK2L0l6gPrTUc9Kq1y9xD1AJpOKQTEUwIBscISwhIroOkmATEgOp+aqgQallgJbtwsIAbEWM6DDUSy3WE1oHJXD6rCJ3awgtixVEDlBALWyFEOjrBwtKN06VDFV0w22b1PZISUw4AJvDVe+/0vIE6aSucPBEQHwAExIDoQcFARlhgQHQg4qAhLDIgOBBxUhCUGRAcCDiqsm6cOruKwzdK3CW/9WgIHZmdUsOXkBYCxcNuyfr/xfG0stbCuy+P/1jjK4Q3nEH0A5JU8fRekeQojd/A9d3njcO//IR3Z82eGv3+gx2DetFJ6t8+KTHsG09r3bD2zBJHXs/CNuSuXWzu1p/bFW/imXtUFJBcIzb2yfk+ApvpKMME3Zt9nnII4fMHw5z6oLh+DZWJ5uLPhz5QUQf8DOX4/YQAUzrwAAAAASUVORK5CYII=" />
+        <input type="password" placeholder="请设置密码" class="js0011" name="pass" />
+        <i class="iconfont icon-guanbi-yanjing js001" or="0"></i>
+    </div>
+    <div class="item">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAEdklEQVR4Xu2djZENQRCA+yJABIgAESACRIAIEAEiQASIABEgAkSACBAB9dXNVu319cy+nenZH6+7StWVe9Nv5pue7p7e2bkT2Y7cFJFbInJdRC6mn3XvPonIbxH5KiL8/HkL3T9ZuRN3ROSBiNxt6Md7EXkjIh8adDQ1XQMiVnZfRB6LyJWm3p9t/ENEniWYWOtisjRE4L1My7XXIAH4UESw0EVkKYhY37uMnysN9FvygbS/NpMIPvNeaj+z6byPLwGRYAFAQJQEn8bA+UfgyAmBB534UYJRSbBKQKKzm/SGSNB4Xej9z+THWHo1foyJASa+8HLhe1jeBJ8u0hNiCeCf5BsZvJegi2B1IaOwG8heEEsAWbb8vsbypoBjmVgcqZMlXUD2gIi/+pgZxKtkLVMwWn9PBvAoo+TGhM+d/d3eELGE75kg0sUKCiPOrQbySUC6rQRviERha/exNMCBbQ4kgYyo7SKeEHPLeKklnAOCjyTJ13LbK/XxhMgy1ts4CgTAXVvIE3VOybK+6tExL4jWsiGNITGms2sLk8ska3FxM14QvyRg404+T0nw2gCH7yePfKo6w86IINMkHhCxNiCOBStk9t0iYNMoTxuTObAqdDLenPJ4QLRysq1ZYckamwOfB0QroDTProPlWSqsVdMcYFohWg6booJnsdWbJ9B0sYIoXR0AWyGSWJNgj6V5eXhTU/os90PiXV3EbYVoRTy3JLYTTGvim3x4K0RmT1dMtg7R2lm9TZWlqnlrhWjtBC5tLLXRYCw/3rSz6gGxVWeVNcxs9Fd9PiDOBMjHA2IFNN0kIAZEBwIOKsIS9wqRCghFTfaeY6GOqLd4no9BHXiZKnQf2fLp59KUyQ46JHVIOkINjue5UycYeg14Tb2U8gDOVjYrUxA5vYC1HbtgpVTBTSlBLD27PUao2cJKDmLumcQxwhuP2SyZ5SBaVkjJH9/Ifrm69raDWcCAKFLAQD9KMK0xB9EqLGy1Wt1rXqwquLnHzkH8paLx1qvVvUDqKjjRmirVGclBdM3oe41wAb3WijzHLCCWZyIgOlhqQAyIDgQcVIQlBkQHAg4qwhIDogMBBxVhiQHxtAj8IhUDsIgnKxwK2L0l6gPrTUc9Kq1y9xD1AJpOKQTEUwIBscISwhIroOkmATEgOp+aqgQallgJbtwsIAbEWM6DDUSy3WE1oHJXD6rCJ3awgtixVEDlBALWyFEOjrBwtKN06VDFV0w22b1PZISUw4AJvDVe+/0vIE6aSucPBEQHwAExIDoQcFARlhgQHQg4qAhLDIgOBBxUhCUGRAcCDiqsm6cOruKwzdK3CW/9WgIHZmdUsOXkBYCxcNuyfr/xfG0stbCuy+P/1jjK4Q3nEH0A5JU8fRekeQojd/A9d3njcO//IR3Z82eGv3+gx2DetFJ6t8+KTHsG09r3bD2zBJHXs/CNuSuXWzu1p/bFW/imXtUFJBcIzb2yfk+ApvpKMME3Zt9nnII4fMHw5z6oLh+DZWJ5uLPhz5QUQf8DOX4/YQAUzrwAAAAASUVORK5CYII=" />
+        <input type="text" placeholder="邀请码,用于统计" name="inviter" />
+        <i class="iconfont"></i>
+    </div>
+    <div style="display: flex; align-items: center; font-size: 12px; padding-bottom: 20px;">
+        <input id="checkbox" type="checkbox" style="margin-right: 6px;" />
+    	<span id="showService">服务条款</span>
+    </div>
+    <div class="btn js-re-enter">
+        注册
+    </div>
+</div>
+<div id="xieyi" style=" display: none; position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,.4);">
+	<div style=" position: fixed; width: 80%; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #fff; height: 500px; padding: 12px;">
+		<div id="closed" style="position: absolute; z-index: 3; width: 20px; height: 20px; text-align: center; line-height: 20px; background: #f00; color: #fff; right: -10px; top: -10px; border-radius: 50%;">×</div>
+		<h2 style=" position: fixed; background: #fff; left: 0; top: 0; right: 0; font-size: 20px; text-align: center; padding: 12px; color: rgb(7,135,254);">服务协议</h2>
+		<div id="xieyiCent" style="padding-top: 50px; height: 450px; overflow-y: scroll;"></div>
+	</div>
+</div>
+<script>
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    //密码显示隐藏
+    $(".js001").click(function() {
+        var or = $(this).attr("or")
+        if(or == 0) {
+            $(".js0011").attr("type", "text");
+            $(this).attr("or", "1");
+            $(this).removeClass("icon-guanbi-yanjing");
+            $(this).addClass("icon-faxian-yanjing");
+        } else {
+            $(".js0011").attr("type", "password");
+            $(this).attr("or", "0");
+            $(this).addClass("icon-guanbi-yanjing");
+            $(this).removeClass("icon-faxian-yanjing");
+        }
+    })
+    
+    $.ajax({
+    	type:"post",
+    	url:"https://app.insistcn.cn/api/public/label",
+    	async:true,
+    	success:function(data){
+    		console.log(data)
+    		if(data.code ==0) {
+    			$('#xieyiCent').html(data.data.service_agreement)
+    		}
+    	}
+    });
+    
+    //------------------------------------------------------------------------
+    //验证码倒计时
+    $(".get-code").click(function() {
+        var mobile = $("[name='mobile']").val();
+        var regMobile = /^1[3-9]\d{9}$/;
+        if(regMobile.test(mobile)) {
+            var or = $(this).attr("or");
+            if(or == 0) {
+                settime()
+                $(".get-code").attr("or", "1")
+                var datas = {
+                    mobile: mobile
+                }
+
+                $.ajax({
+                    type:"post",
+                    url:'/api/public/sendsms',
+                    data:{
+                        mobile: $("[name='mobile']").val(),
+                    },
+                    success: function(data){
+                        console.log(JSON.stringify(data))
+                    }
+                })
+                /*
+                post("/login/phone-sms", datas, function(res) {
+                    settime()
+                    localStorage.setItem("t", Date.parse(new Date()));
+                })*/
+
+            }
+        } else {
+            alert('手机号格式错误');
+        }
+    })
+    $("[name='inviter']").val(getQueryString('q'));
+    //限制时间
+    var num = 60;
+    //时间倒计时函数
+    function settime() {
+        if(num <= 0) {
+            $(".get-code").text("重新发送");
+            $(".get-code").attr("or", "0")
+            num = 60;
+            return false;
+        } else {
+            $(".get-code").text("重新发送(" + num + "s)");
+            num--;
+        }
+        setTimeout(function() {
+            settime();
+        }, 1000);
+    }
+    
+    $('#showService').on('click',function(){
+    	$('#xieyi').show()
+    	$('#closed').on('click',function(){
+    		$('#xieyi').hide()
+    		return
+    	})
+    })
+    
+    //------------------------------------------------------------------------
+    $(".js-re-enter").click(function() {
+    	
+    	if(!$('#checkbox').is(':checked')) {
+    		alert('请同意服务协议');
+    		return
+    	}
+        var mobile = $("[name='mobile']").val();
+        var password = $("[name='pass']").val();
+        var mobilepass = $("[name='mobilepass']").val();
+        var inviter = $("[name='inviter']").val();
+        var regMobile = /^1[3-9]\d{9}$/;
+        if(regMobile.test(mobile)) {
+            var datas = {
+                mobile: mobile,
+                password: password,
+                inviter: inviter,
+                verification_code: mobilepass
+            }
+            $.ajax({
+                type: 'post',
+                url: '/api/public/register',
+                data:datas,
+                success:function(data){
+                    console.log(data)
+                    if(data.code == 0) {
+                        window.location.href = "down.html"
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            })
+        } else {
+            alert('手机号格式错误');
+        }
+    })
+</script>
+</body>
+
+</html>

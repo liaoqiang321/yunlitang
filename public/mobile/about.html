@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+    <title>共享智慧</title>
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/media.css">
+    <script type="text/javascript">
+        setTimeout(function () {
+            console.log('document.getElementById("headerTop").style', document.getElementById("headerTop").style
+                .height, document.body.clientHeight);
+            document.getElementById("headerTop").style.height = document.body.clientHeight + 'px';
+        }, 1);
+    </script>
+</head>
+
+<body data-spy="scroll" data-target="#bs-example-navbar-collapse-1">
+    <div class="logo" style="display:none">
+        <img src="img/logo.jpg" />
+    </div>
+    <header class="wrapper header" id="headerTop">
+        <nav class="navbar navbar-default navbar-wh">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                        aria-expanded="false">
+                        <img src="./img/menu.png" alt="">
+                        <!-- <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar top-bar"></span>
+                        <span class="icon-bar middle-bar"></span>
+                        <span class="icon-bar bottom-bar"></span> -->
+                    </button>
+                    <a class="header-left-logo" href="">
+                        <img class="logoicon" src="./img/logo2.png">
+                        <img class="logoimg" src="./img/share-logo.png">
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="./index.html">首页</a></li>
+                        <li><a href="./apply.html">应用场景</a></li>
+                        <li><a href="./demo.html">使用指导</a></li>
+                        <li><a href="./doload.html">下载APP</a></li>
+                        <li class="active"><a href="./about.html">加入我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="swiper-container banner-carousel" id="home">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img class="about-banner-bg" src="./img/aboutus.png">
+                    <div class="about-detail">
+                        <h3 class="about-title">关于我们</h3>
+                        <div class="spaceline"></div>
+                        <p class="about-desc">ABOUT US</p>
+                    </div>
+                    <div class="about-intro">
+                        <div class="about-us-intro">
+                            <p>1.我们不卖任何实物商品！不要任何充值，绝不是传销。</p>
+                            <p>2.我们想让你的聪明才智得到利益最大化，可以充分变现，让你不再怀才不遇。</p>
+                            <p>3.自认为普普通通的你，也许你懂的正是人家所需要的，只是你不知道而已。</p>
+                            <p>4.我们想让你的成长变得更轻松，你可以不出家门就能找到最专业最实用的解答，不是飞在天上，高大空的说教，而是最适合你的，最能帮助你的答案。</p>
+                            <p>5.你既可以是提问者，也可以是回答者。我们不设任何门槛，以解决问题为导向。</p>
+                            <p>6.对于隐私的保护，我们一直是不遗余力的！</p>
+                        </div>
+                        <!-- <div class="about-us-intro">
+                            因此,我们要用这个主旨来引导我们写这个关于我们?
+                            关于我们内容可以简明扼要表达:
+                            你的品牌名称 、品牌标识、品牌信条、企业团队...</div>
+                        <div class="about-us-intro">
+                            我们的常见有效的内容和策略,通过展示更多的信息
+                            和讲述品牌故事目的是为了建立信任和价值和情感
+                            的连接.这些信息产品来源历史，我们的价值观企业
+                            创办的初衷传递传出一个真实的企业
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- <section class="wrapper about-us">
+        <div class="w1200">
+            <div class="container-fluid" id="about">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="chinese-title font-white">关于我们</h4>
+                        <div class="divide-line about-us-line bg-blue"></div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="about-us-intro"> About Us - 旨在建立信任和讲述你的品牌故事
+                            (building trust and telling your story)</div>
+                        <div class="about-us-intro"> 因此,我们要用这个主旨来引导我们写这个关于我们?
+                            关于我们内容可以简明扼要表达:
+                            你的品牌名称 、品牌标识、品牌信条、企业团队...</div>
+                        <div class="about-us-intro"> 我们的常见有效的内容和策略,通过展示更多的信息
+                            和讲述品牌故事目的是为了建立信任和价值和情感
+                            的连接.这些信息产品来源历史，我们的价值观企业
+                            创办的初衷传递传出一个真实的企业</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>

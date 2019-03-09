@@ -1,0 +1,44 @@
+<include file="public@header" />
+</head>
+<body>
+	<link rel="stylesheet" href="//static.jstree.com/3.3.7/assets/dist/themes/default/style.min.css" />
+	<script src="//static.jstree.com/3.3.7/assets/dist/jstree.min.js"></script>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">用户关系</a></li>
+		</ul>
+		<form class="well form-inline margin-top-20" method="post" action="">
+			手机号:
+			<input type="text" class="form-control" name="mobile" style="width: 200px;"
+					value="{$data.mobile|default=''}" placeholder="">
+			<input type="submit" class="btn btn-primary" value="搜索"/>
+			<a class="btn btn-info" href="{:url('gxzh/export')}">导出全部</a>
+		</form>
+<div id="evts" class="demo"></div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+	<script>
+		var pid = '{$pid}';
+			$('#evts')
+				.on("changed.jstree", function (e, data) {
+					if(data.selected.length) {
+						alert(data.instance.get_node(data.selected[0]).text);
+					}
+				})
+				.jstree({
+					'core' : {
+						'data' : {
+							"url" : "{:url('gxzh/relationship')}",
+							"data" : function (node) {
+								if(node.id == '#' && pid != '#'){
+									return { "id" : pid };
+								}else{
+									return { "id" : node.id };
+								}
+							}
+						}
+					},
+				});
+			</script>
+</body>
+</html>

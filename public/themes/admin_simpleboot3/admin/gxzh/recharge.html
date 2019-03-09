@@ -1,0 +1,22 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <form class="form-horizontal js-ajax-form margin-top-20" action="" method="post">
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label"><span class="form-required">*</span>充值金额</label>
+            <div class="col-md-6 col-sm-10">
+                <input type="text" class="form-control" name="amount" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="uid" value="{$data.id}">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('Department/index')}">科室领域</a></li>
+        <li><a href="{:url('Department/add')}">添加科室领域</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('Department/index')}">
+        分类名称:
+        <input type="text" class="form-control" name="keyword" style="width: 200px;"
+               value="{$keyword|default=''}" placeholder="请输入">
+        <input type="submit" class="btn btn-primary" value="搜索"/>
+        <a class="btn btn-danger" href="{:url('Department/index')}">清空</a>
+    </form>
+
+    <form method="post" class="js-ajax-form" action="{:url('Department/sort')}">
+        <div class="table-actions">
+            <button type="submit" class="btn btn-primary btn-sm js-ajax-submit">{:lang('SORT')}</button>
+            <button class="btn btn-success btn-sm js-ajax-submit" type="submit"
+                    data-action="{:url('Department/toggle',array('display'=>'1'))}" data-subcheck="true">
+                {:lang('DISPLAY')}
+            </button>
+            <button class="btn btn-danger btn-sm js-ajax-submit" type="submit"
+                    data-action="{:url('Department/toggle',array('hide'=>1))}" data-subcheck="true">{:lang('HIDE')}
+            </button>
+        </div>
+        <empty name="keyword">
+            <table class="table table-hover table-bordered table-list" id="menus-table">
+                <thead>
+                <tr>
+                    <th width="16" style="padding-left:20px;">
+                        <label>
+                            <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                        </label>
+                    </th>
+                    <th width="50">排序</th>
+                    <th width="50">ID</th>
+                    <th>分类名称</th>
+                    <th>图标</th>
+                    <th>状态</th>
+                    <th width="210">操作</th>
+                </tr>
+                </thead>
+                {$category_tree}
+                <tfoot>
+                <tr>
+                    <th width="16" style="padding-left:20px;">
+                        <label>
+                            <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                        </label>
+                    </th>
+                    <th width="50">排序</th>
+                    <th width="50">ID</th>
+                    <th>分类名称</th>
+                    <th>图标</th>
+                    <th>状态</th>
+                    <th width="210">操作</th>
+                </tr>
+                </tfoot>
+            </table>
+            <else/>
+            <table class="table table-hover table-bordered table-list">
+                <thead>
+                <tr>
+                    <th width="16">
+                        <label>
+                            <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                        </label>
+                    </th>
+                    <th width="50">排序</th>
+                    <th width="50">ID</th>
+                    <th>分类名称</th>
+                    <th>图标</th>
+                    <th>状态</th>
+                    <th width="210">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach name="categories" item="vo">
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x"
+                                   name="ids[]" value="{$vo.id}">
+                        </td>
+                        <td>
+                            <input name="list_orders[{$vo.id}]" type="text" size="3" value="{$vo.list_order}"
+                                   class="input-order">
+                        </td>
+                        <td>{$vo.id}</td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.img?'<img src="'.$vo['img'].'" width=80 height=80>':''}</td>
+                        <td>{$vo.status?'<span class="label label-success">显示</span>':'<span class="label label-warning">隐藏</span>'}</td>
+                        <td>
+                            <a class="btn btn-xs btn-primary" href="{:url('Department/add', ['parent' => $vo.id])}">添加子分类</a>
+                            <a class="btn btn-xs btn-primary" href="{:url('Department/edit',['id'=>$vo.id])}">编辑</a>
+                            <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('Department/delete',['id'=>$vo.id])}">删除</a>
+                            <empty name="vo.status">
+                                <a class="btn btn-xs btn-success js-ajax-dialog-btn" data-msg="您确定隐藏此分类吗"
+                                   href="{:url('Department/toggle',['ids'=>$vo.id,'display'=>1])}">显示</a>
+                                <else/>
+                                <a class="btn btn-xs btn-warning js-ajax-dialog-btn" data-msg="您确定隐藏此分类吗"
+                                   href="{:url('Department/toggle',['ids'=>$vo.id,'hide'=>1])}">隐藏</a>
+                            </empty>
+                        </td>
+                    </tr>
+                </foreach>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th width="16">
+                        <label>
+                            <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                        </label>
+                    </th>
+                    <th width="50">排序</th>
+                    <th width="50">ID</th>
+                    <th>分类名称</th>
+                    <th>图标</th>
+                    <th>状态</th>
+                    <th width="210">操作</th>
+                </tr>
+                </tfoot>
+            </table>
+        </empty>
+        <div class="table-actions">
+            <button type="submit" class="btn btn-primary btn-sm js-ajax-submit">{:lang('SORT')}</button>
+            <button class="btn btn-success btn-sm js-ajax-submit" type="submit"
+                    data-action="{:url('Department/toggle',array('display'=>'1'))}" data-subcheck="true">
+                {:lang('DISPLAY')}
+            </button>
+            <button class="btn btn-danger btn-sm js-ajax-submit" type="submit"
+                    data-action="{:url('Department/toggle',array('hide'=>1))}" data-subcheck="true">{:lang('HIDE')}
+            </button>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    $(document).ready(function () {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function () {
+            $("#menus-table").treeTable({
+                indent: 20,
+                initialState: 'expanded'
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

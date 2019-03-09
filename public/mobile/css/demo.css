@@ -1,0 +1,127 @@
+
+a:hover,a:link,a:visited{
+	text-decoration:none;
+}
+.current {
+    color: #ffffff
+}
+
+#changeicon {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 34px;
+    text-align: center;
+    margin-top: 125px;
+    width: 100%;
+}
+#changeicon li {
+   width: 30%;
+ }
+#changeicon li a{
+   color:#333333;
+}
+
+.current-bacco {
+    background-color: #1BB3A6FF;
+    padding: 18px;
+}
+
+.noneimg {
+    display: none;
+}
+
+.colorbg {
+    position: absolute;
+}
+
+.graybg {
+    position: relative;
+    background-color: #ffffff;
+}
+
+.demo-bg {
+    width: 100%;
+    position: absolute;
+}
+
+.demo-bg img {
+    width: 100%;
+    margin-top: -21px;
+}
+
+.demo-detail {
+    position: relative;
+    text-align: center;
+}
+
+.demo-title {
+    font-size: 24px;
+    color: #ffffff;
+    margin: 82px 0;
+}
+
+.swiper-container {
+    margin-top: 75px;
+}
+
+.header-left-logo {
+    padding-left: 13px;
+}
+
+.header-left-logo img {
+    padding-top: 15px;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #F8F8F8;
+}
+
+.navbar-toggle {
+    margin-top: 1px;
+}
+
+/* 设置导航高度 */
+.navbar-wh {
+    height: 62px;
+    min-height: 50px;
+    margin-bottom: 20px;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #F8F8F8;
+}
+
+.navbar-default .navbar-nav>li.active a {
+    color: #118BFE !important;
+    border-bottom: 1px solid #464646;
+    background-color: transparent !important;
+    margin: 0 30px;
+}
+
+.navbar-default .navbar-nav>li:hover a {
+    color: #ffffff;
+    border-bottom: 1px solid #464646;
+    background-color: transparent;
+    transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -webkit-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #FFFFFF !important;
+}
+
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+    background-color: #FFFFFF !important;
+}
+
+.fosi {
+    margin-top: 7px;
+}
+/* 扩大视频滑动区域 */
+.swiper-range{
+    padding:20px;
+}

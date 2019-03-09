@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+  <title>共享智慧</title>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+  <link rel="stylesheet" type="text/css" href="css/media.css">
+  <script type="text/javascript">
+    setTimeout(function () {
+      console.log('document.getElementById("headerTop").style', document.getElementById("headerTop").style.height,
+        document.body.clientHeight);
+      document.getElementById("headerTop").style.height = document.body.clientHeight + 'px';
+    }, 1);
+  </script>
+</head>
+
+<body data-spy="scroll" data-target="#bs-example-navbar-collapse-1">
+  <div class="logo" style="display:none">
+    <img class="logoicon" src="./img/logo2.png">
+  </div>
+  <header class="wrapper header" id="headerTop">
+    <nav class="navbar navbar-default navbar-wh">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+            aria-expanded="false">
+            <img src="./img/menu.png" alt="">
+          </button>
+          <a class="header-left-logo" href="">
+            <img class="logoicon" src="./img/logo2.png">
+            <img class="logoimg" src="./img/share-logo.png">
+          </a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active">
+              <a href="./index.html">首页</a></li>
+            <li><a href="./apply.html">应用场景</a></li>
+            <li><a href="./demo.html">使用指导</a></li>
+            <li><a href="./doload.html">下载APP</a></li>
+            <li><a href="./about.html">关于我们</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="swiper-container banner-carousel" id="home">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="./img/index-banner-bg.png">
+        </div>
+      </div>
+    </div>
+    <div class="index-detail">
+      <div class="index-share-detail">
+        <h3 class="index-title">共享智慧</h3>
+        <video controls="controls" style="width: 270px; height: 170px; display: block;" src="https://apd-9054518b4c144bac17f5ed62ceba5532.v.smtcdns.com/om.tc.qq.com/Aktdv-y4OZpSa7t5UQz4BDw28oAxpNDDFstvR99k_vPI/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/c0827gab7qy.mp4?sdtfrom=v1104&guid=f8c4e3886752cbd7a1a203223fc6e769&vkey=D9754241AEEAE348B47A9DC307EBA6805B49217E9D60E15896902AD2340497AA0DA6C0E37C3754937C2A24BDD1A6899E8782C6B5A5A620DD4C2D506880526BD893C76DCF08D3C93CDAA954E614B5D84D4E29B9661DEB6998E12E025E966D7A91CC6F36E53C16607CEA8280F293ACA3010AB34F42E316A163"></video>
+      </div>
+      <div>
+        <img class="index-guide" src="./img/san.png" alt="">
+        <p class="index-intro">
+            共享家族又出新成员啦，共享智慧！一个可以赚钱的APP。您可以随时随地提问或者解答问题，收获现金！无广告，不扰民！每个人都应该安装一个！
+        </p>
+      </div>
+
+    </div>
+  </header>
+  <script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/swiper.min.js"></script>
+</body>
+</html>

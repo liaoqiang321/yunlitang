@@ -1,0 +1,50 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap">
+		
+		<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="">
+			<div class="form-group">
+				<label for="" class="col-sm-2 control-label">分佣配置</label>
+				<div class="col-xs-12 col-sm-8 col-md-10 col-lg-8" id="fenyong">
+					<?php foreach ($config as $key => $value): ?>
+						<div class="input-group">
+							<span class="input-group-addon"><?= $key + 1 ?>级分佣</span>
+							<input type="number" name="config[<?= $key ?>]" value="<?= $value ?>"
+									class="form-control" placeholder="请输入整数">
+							<span class="input-group-addon">%</span>
+						</div>
+					<?php endforeach; ?>
+					<button class="btn btn-default pull-right remove" type="button" id="romve">-</button>
+					<button type="button" class="btn btn-primary disabled pull-right">增减</button>
+					<button class="btn btn-default pull-right add" type="button" id="add">+</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+<script>
+	$(function () {
+
+		$('.form-horizontal').on('click', '.add', function () {
+			count = $(this).parents('.box-success').index();
+			num = $(this).parent().find('.input-group').length;
+			$(this).parent().find('.input-group').last().after('<div class="input-group" id="fenyong"><span class="input-group-addon">' + (num + 1) + '级分佣</span><input type="number" name="config[' + num + ']" value="" class="form-control"placeholder="请输入整数"> <span class="input-group-addon">%</span></div>')
+		})
+		$('.form-horizontal').on('click', '.remove', function () {
+			if ($(this).parent().find('.input-group').length == 1) {
+				return false
+			}
+			$(this).parent().find('.input-group').last().remove()
+		})
+
+	});
+</script>
+</body>
+</html>

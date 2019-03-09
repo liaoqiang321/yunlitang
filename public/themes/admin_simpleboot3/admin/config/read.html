@@ -1,0 +1,79 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <foreach name="group" item="vo" key="k">
+            <li <?php if($k==$groupid){echo 'class="active"';} ?> ><a href="{:url('config/read',['groupid'=>$k])}">{$vo}</a></li>
+        </foreach>
+    </ul>
+    <form method="post" class="form-horizontal js-ajax-form margin-top-20" enctype="multipart/form-data" action="{:url('config/save')}">
+        
+        <foreach name="config" item="vo">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">{$vo.title}：</label>
+                <div class="col-md-6 col-sm-10">
+                <?php if($vo['type']==1){ ?>
+                    <input type="text" class="form-control" name="value_{$vo.id}_{$vo.type}" value="{$vo['value']}">
+                <?php } elseif ($vo['type']==2 || $vo['type']==4){ ?>
+                <textarea name="value_{$vo.id}_{$vo.type}"  class="form-control" cols="30" rows="10">{$vo['value']}</textarea>
+                <?php } elseif ($vo['type']==3){ ?>
+                
+                <?php if($vo['value']){ $imgsrc = $vo['value']; }else{ $imgsrc = '__TMPL__/public/assets/images/default-thumbnail.png'; } ?>
+                <div>
+                    <a href="javascript:uploadOneImage('图片上传','#{$vo.id}_js-thumbnail-input');">
+                        <img src="{$imgsrc}" id="{$vo.id}_js-thumbnail-input-preview" width="135" style="cursor: pointer"/>
+                    </a>
+                    <input type="button" class="btn btn-sm btn-cancel-thumbnail" cfg_id="{$vo.id}" value="取消图片">
+                </div>
+                <input type="hidden" name="value_{$vo.id}_{$vo.type}" class="form-control" id="{$vo.id}_js-thumbnail-input">
+                <?php } elseif ($vo['type']==5){ ?>
+                    <script type="text/plain" style="height:600px;" id="content_{$vo.id}" name="value_{$vo.id}_{$vo.type}">{$vo.value}</script>
+                <?php } ?>
+                <p class="help-block">【{$vo.name}】{$vo.remark}</p>
+                </div>
+            </div>
+        </foreach>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        <foreach name="config" item="vo">
+            <?php if ($vo['type']==5){ ?>
+                editorcontent{$vo.id} = new baidu.editor.ui.Editor();
+                editorcontent{$vo.id}.render('content_{$vo.id}');
+                try {
+                    editorcontent{$vo.id}.sync();
+                } catch (err) {
+                }
+            <?php } ?>
+        </foreach>
+    });
+</script>
+<script>
+    $(function () {
+
+        $('.btn-cancel-thumbnail').click(function () {
+            var cfg_id = $(this).attr('cfg_id');
+            $('#'+cfg_id+'_js-thumbnail-input-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+            $('#'+cfg_id+'_js-thumbnail-input').val('');
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">咨询列表</a></li>
+		</ul>
+
+		<form class="well form-inline margin-top-20" method="post" action="">
+			提问者手机号:
+			<input type="text" class="form-control" name="mobile" style="width: 200px;"
+					value="{$data.mobile|default=''}" placeholder="">
+			状态:
+			<select class="form-control" name="status">
+				<option value=""></option>
+				<option value="0" <?php if(isset($data['status']) && $data['status']==='0'){echo 'selected';} ?> >未解决</option>
+				<option value="1" <?php if(isset($data['status']) && $data['status']==='1'){echo 'selected';} ?> >已解决</option>
+				<option value="2" <?php if(isset($data['status']) && $data['status']==='2'){echo 'selected';} ?> >撤销</option>
+			</select>
+			排序:
+			<select class="form-control" name="order">
+				<option value="">默认</option>
+				<option value="1" <?php if(isset($data['order']) && $data['order']==='1'){echo 'selected';} ?> >金额由高到低</option>
+				<option value="2" <?php if(isset($data['order']) && $data['order']==='2'){echo 'selected';} ?> >金额由低到高</option>
+			</select>
+			<input type="submit" class="btn btn-primary" value="搜索"/>
+			<input type="submit" class="btn btn-info" name="export" value="导出"/>
+		</form>
+		
+		<table class="table table-hover table-bordered margin-top-20">
+			<thead>
+				<tr>
+					<th></th>
+					<th align="left">提问者</th>
+					<th align="left">服务</th>
+					<th align="left">标题</th>
+					<th align="left">预算金额</th>
+					<th align="left">省市</th>
+					<th align="left">一级领域</th>
+					<th align="left">二级领域</th>
+					<th align="left">状态</th>
+					<th align="left">创建时间</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="list" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td><a href="javascript:parent.openIframeLayer('{:url('gxzh/userinfo',['id'=>$vo['uid']])}','',{area: ['800px', '800px'],end:function(){ location.reload(); }});">{$vo.user_nickname}</a></td>
+					<td>{$vo.service_id}</td>
+					<td>{$vo.title}</td>
+					<td>{$vo.money}</td>
+					<td>{$vo.province}-{$vo.city}</td>
+					<td>{$vo.dept1}</td>
+					<td>{$vo.dept2}</td>
+					<td>{$vo.status}</td>
+					<td><?php echo date('Y-m-d H:i:s',$vo['created_at']); ?></td>
+					<td>
+						<a href="javascript:parent.openIframeLayer('{:url('gxzh/answer',['id'=>$vo['id']])}','解答专家',{area: ['1000px', '800px'],end:function(){ location.reload(); }});">专家({$vo.pcount})</a>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

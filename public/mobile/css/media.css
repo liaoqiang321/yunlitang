@@ -1,0 +1,547 @@
+@media screen and (max-width:767px) {
+  .chat-header {
+    background: url("../img/banner1/chat_banner2.jpg") no-repeat center 0;
+    background-size: cover;
+  }
+  .bot-header {
+    background: url("../img/banner1/bot_banner2.jpg") no-repeat center 0;
+    background-size: cover;
+  }
+  .acg-header {
+    background: url(../img/banner1/acg_banner2.jpeg) no-repeat center 0;
+    background-size: cover;
+  }
+  .customerService-header {
+    background: url(../img/banner1/customerService_banner2.jpg) no-repeat center 0;
+    background-size: cover;
+  }
+  .enterprise-header {
+    background: url(../img/banner1/enterprise_banner2.jpeg) no-repeat center 0;
+    background-size: cover;
+  }
+  .media-header {
+    background: url(../img/banner1/media_banner2.jpg) no-repeat center 0;
+    background-size: cover;
+  }
+  .smartHome-header {
+    background: url(../img/banner1/smartHome_banner2.jpg) no-repeat center 0;
+    background-size: cover;
+  }
+  .smartphone-header {
+    background: url(../img/banner1/smartphone_banner2.jpeg) no-repeat center 0;
+    background-size: cover;
+  }
+  .humanoid-header {
+    background: url(../img/banner1/humanoid_banner2.jpg) no-repeat center 0;
+    background-size: cover;
+  }
+  .smartSpeaker-header {
+    background: url(../img/banner1/smartSpeaker_banner2.jpg) no-repeat center 0;
+    background-size: cover;
+  }
+  .vehicle-header {
+    background: url(../img/banner1/vehicle_banner2.jpeg) no-repeat center 0;
+    background-size: cover;
+}
+/* 图标导航的位置 */
+  .navbar-toggle {
+    margin-top: 12px;
+  }
+
+  /* ------- */
+  .fpb-img-box {
+    width: 100%;
+  }
+  .fpb-img {
+    width: 100%;
+  }
+  .fpb-desc {
+    width: 100%;
+    padding: 0 5px;
+    margin-bottom: 33px;
+  }
+  /*common.css*/
+  .wrapper {
+    width: 100%;
+    min-width: 100%;
+  }
+  .w1200 {
+    width: 100%;
+    margin: 0 auto;
+  }
+  .f-p-5 {
+    padding: 0;
+  }
+  .f-p-n {
+    padding: 15px;
+  }
+  .f-p-l-n {
+    padding-left: 15px;
+  }
+  .f-p-r-n {
+    padding-right: 15px;
+  }
+  .f-m-b-24 {
+    margin-bottom: 24px !important;
+  }
+  .navbar-brand {
+    padding-left: 15px;
+  }
+
+  .banner-title {
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: 2px;
+    line-height: 48px;
+    margin-bottom: 10px;
+  }
+  /*  */
+  /* .doload-title {
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: 2px;
+    line-height: 48px;
+    margin-bottom: 10px;
+  } */
+  
+  .pc-banner-desc {
+    display: none;
+  }
+  .app-banner-desc {
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    line-height: 30px;
+    letter-spacing: 2px;
+    padding: 0 20px;
+  }
+  /* .banner-detail {
+    top: 60%;
+  } */
+  .chinese-title {
+    margin-top: 50px;
+    font-size: 24px;
+  }
+  .icon-text {
+    margin-bottom: 19px;
+    font-size: 14px;
+  }
+  .icon.icon-robot {
+    margin-bottom: 20px;
+  }
+  .icon.icon-chat {
+    margin-bottom: 23px;
+  }
+  .technology {
+    padding-bottom: 70px;
+  }
+  .technology-line {
+    margin-bottom: 50px;
+  }
+  .tech-item {
+    margin-bottom: 20px;
+  }
+  .tech-item .divide-line {
+    margin: 15px auto 24px;
+    opacity: 1;
+  }
+  .tech-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 12px;
+  }
+  .tech-item:first-child img {
+    height: 40px;
+    margin-top: 10px;
+  }
+  .server-name {
+    font-size: 18px;
+    text-align: center;
+  }
+  .desc {
+    font-size: 14px;
+    line-height: 18px;
+    opacity: 1;
+    margin-top: 10px;
+    text-align: justify;
+  }
+  .product {
+    padding-bottom: 30px;
+    background: #106DAD url("../img/footer/footer_add.png");
+  }
+  .product-item {
+    margin-bottom: 23px;
+  }
+  .icon {
+    transform: scale(.7);
+    -webkit-transform: scale(.7);
+    -moz-transform: scale(.7);
+    -ms-transform: scale(.7);
+    -o-transform: scale(.7);
+    margin: 13px auto 20px;
+  }
+  .cooperative {
+    padding-bottom: 72px;
+  }
+  .cooperative-item {
+    height: 80px;
+    line-height: 80px;
+  }
+  .app-kehu {
+    margin-top: 30px;
+    display: block;
+  }
+  /* .about-us-intro {
+    width: 100%;
+    font-size: 14px;
+    line-height: 28px;
+    margin-bottom: 30px;
+  } */
+  .about-us-line {
+    margin-bottom: 25px;
+  }
+  .swiper-slide:hover .img-mask {
+    display: none;
+  }
+  .company-environment {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .translate {
+    display: none;
+  }
+  .news {
+    padding-bottom: 60px;
+  }
+  .hide-new-item {
+    display: block;
+  }
+  .news-item {
+    padding: 5px;
+    margin-bottom: 3px;
+  }
+  .news-line {
+    margin-bottom: 40px;
+  }
+  .news-item img {
+    margin-bottom: 6px;
+  }
+  .news-item .caption {
+    font-size: 12px;
+    line-height: 18px;
+    height: 54px;
+  }
+  .date-show {
+    display: none;
+  }
+  .triangle {
+    border-left: 8px solid transparent;
+    border-bottom: 8px solid #e5e5e5;
+  }
+  .news-item:hover {
+    border-bottom: 1px solid #E5E5E5;
+    background-color: #0F6DAE;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+  .join-us-line {
+    margin-bottom: 30px;
+  }
+  .join-us-img {
+    max-width: 100%;
+    height: auto;
+    padding-right: 0;
+  }
+  .belong-site {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+  .arrow {
+    width: 14px;
+    height: 7px;
+  }
+  .work-show-table .program,
+  .work-show-table .require {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .scroll-swiper .swiper-slide {
+    padding: 10px 12px;
+  }
+  .pic-text {
+    margin-bottom: 23px;
+  }
+  .occupation {
+    font-size: 10px;
+    -webkit-text-size-adjust: none;
+  }
+  .occupation-name {
+    font-size: 12px;
+    display: inline;
+    width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .footer {
+    padding-top: 20px;
+  }
+  .footer-logo-box {
+    text-align: center;
+  }
+  .footer-logo {
+    margin: 20px auto;
+    max-width: 100%;
+  }
+  .flex {
+    display: box;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+  }
+  .flex-1 {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .company-tel,
+  .company-address,
+  .company-eamil {
+    margin: 0 0 8px 0;
+  }
+  .erweima-box {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .erweima-img {
+    margin-right: 0;
+  }
+  .footer-b-border {
+    margin-top: 10px;
+  }
+  .copyright {
+    margin: 10px 0;
+    text-align: left;
+  }
+  .copyright-rt {
+    margin-left: 0;
+    display: inline-block;
+    width: 100%;
+  }
+  .cooperative-line {
+    margin-bottom: 39px;
+  }
+  .swiper2-box {
+    display: block;
+  }
+  .swiper1-box {
+    display: none;
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 30px;
+    height: 30px;
+  }
+  .swiper2 .swiper-slide {
+    height: 180px;
+    overflow: hidden;
+  }
+  .swiper-img {
+    /*height:300px;*/
+    height: auto;
+  }
+  /*news.css*/
+  .news-center {
+    padding-bottom: 40px;
+  }
+  .news-navs-title {
+    font-weight: 600;
+    letter-spacing: 3px;
+    margin: 30px 0;
+    font-size: 24px;
+    color: #999;
+  }
+  .company-logo-box {
+    width: 100px;
+    height: 77px;
+    line-height: 77px;
+  }
+  .company-logo {
+    width: 100%;
+    height: 100%;
+  }
+  .news-detail {
+    padding: 12px 10px 0;
+  }
+  .news-content {
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 4px;
+  }
+  .news-date {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .loading-more {
+    margin-top: 30px;
+    width: 120px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 12px;
+  }
+  /*product.css*/
+  .product-header .banner-desc {
+    width: 100%;
+  }
+  .app-case-item-header {
+    padding: 0 15px;
+    margin-bottom: 40px;
+  }
+  .app-value-title {
+    padding-left: 15px;
+    margin-bottom: 30px;
+  }
+  .product-header .banner-desc {
+    padding: 0 45px;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .application-value {
+    padding: 30px 0 60px;
+  }
+  .value-list-item {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 0 15px;
+    margin-bottom: 10px;
+  }
+  .application-case {
+    padding-top: 30px;
+  }
+  .app-case-item {
+    margin-bottom: 60px;
+  }
+  .app-case-title {
+    padding-left: 15px;
+    margin-bottom: 30px;
+  }
+  .case-desc p {
+    margin-top: -6px;
+    width: 100%;
+    font-size: 12px;
+    line-height: 24px;
+    text-align: justify;
+  }
+  .app-case-item-body {
+    height: 217px;
+    margin: 30px auto;
+  }
+  .gary-box {
+    margin-right: 12px;
+  }
+  .play {
+    margin: -20px 0 -20px;
+    width: 40px;
+    height: 40px;
+  }
+  .small-pic {
+    width: 100%;
+  }
+  .big-pic {
+    width: 100%;
+    margin-top: 30px;
+  }
+  .other-case-list {
+    width: 100%;
+  }
+  .other-case-list li {
+    width: 33.3333%;
+    margin-bottom: 10px;
+  }
+  .other-case-list li a {
+    width: 100%;
+  }
+  .product-line {
+    margin-bottom: 41px;
+  }
+  .icon-list {
+    margin-right: 5px;
+  }
+  /*bootstrap*/
+  .navbar {
+    position: relative;
+    z-index: 20;
+    min-width: 100%;
+  }
+  .navbar-default {
+    min-width: 100%;
+  }
+  .navbar-default .navbar-toggle:focus,
+  .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+  }
+  .nav {
+    height: auto;
+  }
+  .nav li {
+    padding: 0;
+  }
+  .navbar-default .navbar-nav>li>a {
+    text-align: center;
+  }
+  .navbar-nav {
+    position: relative;
+    margin: 0 -15px;
+    background: rgba(0, 0, 0, .8);
+  }
+  button[class="navbar-toggle"].navbar-toggle .top-bar {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform-origin: 10% 10%;
+    -webkit-transform-origin: 10% 10%;
+    -ms-transform-origin: 10% 10%;
+  }
+  button[class="navbar-toggle"].navbar-toggle .middle-bar {
+    opacity: 0;
+  }
+  button[class="navbar-toggle"].navbar-toggle .bottom-bar {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform-origin: 10% 90%;
+    -webkit-transform-origin: 10% 90%;
+    -ms-transform-origin: 10% 90%;
+  }
+  .app-kehu .swiper-slide img {
+    width: 75% !important;
+  }
+  .banner-carousel .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+  }
+  .china-mobile-logo {
+    height: 27%;
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media screen and (orientation:landscape) {
+  .cooperative-item img {
+    max-height: 100%;
+  }
+  .swiper2 .swiper-slide {
+    height: 220px;
+    overflow: hidden;
+  }
+  .swiper-img {
+    /*height:300px;*/
+    height: auto;
+  }
+}

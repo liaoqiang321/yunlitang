@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html style="overflow: hidden;">
+	<head>
+		<meta charset="utf-8">
+		<meta charset="utf-8" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="cache-control" content="no-cache">
+		<title>共享智慧-使用指南</title>
+		<!-- <link rel="icon" href="favicon.ico"> -->
+		<link href="css/stylepc.css" rel="stylesheet" />
+
+	</head>
+
+
+	<body>
+		<div class="warperscene bbdirect">
+			<div class="nav wh12">
+				<dt>
+					<a href="index.html">
+						<img src="img/logo.png" width="57px" height="57px">
+						<img src="img/logo2.png">
+					</a>
+				</dt>
+				<dd>
+					<a href="index.html">首页</a>
+					<a href="scene.html" >应用场景</a>
+					<a href="direction.html" class="hover">使用指导</a>
+					<a href="download.html">下载</a>
+					<a href="about.html">关于我们</a>
+				</dd>
+			</div>
+
+
+			<div class="main-tab">
+				<div class="tab-box">
+					<ul>
+						<li class="active"><img src="img/l1.png">快速提问</li>
+						<li><img src="img/l2.png">专家能人</li>
+						<li><img src="img/l3.png">回答问题</li>
+					</ul>
+				</div>
+
+				<div class="tab-content">
+					<div class="active-txt tabconmain ">
+						<section>
+							<div class="bannerbox bannerboxabout ">
+								<p class="ptitleabout">
+									<iframe frameborder="0" width="70%" height="400px" src="https://v.qq.com/txp/iframe/player.html?vid=a0029621gkf" allowFullScreen="true"></iframe>
+								</p>
+							</div>
+						</section>
+					</div>
+          
+
+
+
+				</div>
+
+			</div>
+		</div>
+	<script>
+		if ((navigator.userAgent.match(
+				/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+			))) {
+			window.location.href = "/mobile/";
+		}
+	</script>
+	</body>
+	<script type='text/javascript' src='js/jquery-1.12.3.min.js'></script>
+	<script type="text/javascript">
+		$('.tab-content .tabconmain').height($(window).height())
+		$('.tab-content').width($(window).width())
+    
+		$(function() {
+			$(".tab-box li").each(function(index) {
+				
+				$(this).click(function() {
+          
+					$("li.active").removeClass("active"); //注意这里
+					$(this).addClass("active"); //注意这里
+          
+          // console.log(index)
+          switch (index){
+          	case 0:
+              $('.tabconmain iframe').attr('src','https://v.qq.com/txp/iframe/player.html?vid=a0029621gkf')
+          		break;
+            case 1:
+              $('.tabconmain iframe').attr('src','https://v.qq.com/txp/iframe/player.html?vid=c0827gab7qy')
+            	break;
+            case 2:
+              $('.tabconmain iframe').attr('src','https://v.qq.com/txp/iframe/player.html?vid=d0029at1z3n')
+            	break;
+          	default:
+          		break;
+          }
+          
+// 					$(".tab-content .tabconmain.active-txt").removeClass("active-txt");
+// 					$(".tab-content .tabconmain").eq(index).addClass("active-txt");
+				});
+			})
+		});
+	</script>
+</html>

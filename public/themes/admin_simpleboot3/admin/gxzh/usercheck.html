@@ -1,0 +1,128 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">待审核列表</a></li>
+		</ul>
+
+		<table class="table table-hover table-bordered margin-top-20">
+			<thead>
+				<tr>
+					<th></th>
+					<th align="left">用户</th>
+					<th align="left">姓名</th>
+					<th align="left">身份证号</th>
+					<th align="left">身份认证</th>
+					<th align="left">职称</th>
+					<th align="left">职称认证</th>
+					<th align="left">工作</th>
+					<th align="left">工作年限</th>
+					<th align="left">工作认证</th>
+					<th align="left">其他认证1</th>
+					<th align="left"></th>
+					<th align="left">其他认证2</th>
+					<th align="left"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="list" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td><a href="javascript:parent.openIframeLayer('{:url('gxzh/userinfo',['id'=>$vo['id']])}','',{area: ['800px', '800px'],end:function(){ location.reload(); }});">{$vo.user_nickname}</a></td>
+					<td>{$vo.user_login}</td>
+					<td>{$vo.idcard}
+						<?php if($vo['idcard_pic1']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['idcard_pic1']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+						<?php if($vo['idcard_pic2']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['idcard_pic2']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+					</td>
+					<td>
+						<?php if($vo['auth_identity']==1){echo '已审核';}if($vo['auth_identity']==2){ ?>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'identity','auth'=>1])}" class="js-ajax-dialog-btn" data-msg="确定通过吗？">通过</a>
+							<br>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'identity','auth'=>0])}" class="js-ajax-dialog-btn" data-msg="确定不通过吗？">不通过</a>
+						<?php }if($vo['auth_identity']==0){echo '未认证';} ?>
+					</td>
+					<td>{$vo.level}
+						<?php if($vo['title_pic1']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['title_pic1']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+						<?php if($vo['title_pic2']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['title_pic2']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+					</td>
+					<td>
+						<?php if($vo['auth_title']==1){echo '已审核';}if($vo['auth_title']==2){ ?>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'title','auth'=>1])}" class="js-ajax-dialog-btn" data-msg="确定通过吗？">通过</a>
+							<br>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'title','auth'=>0])}" class="js-ajax-dialog-btn" data-msg="确定不通过吗？">不通过</a>
+						<?php }if($vo['auth_title']==0){echo '未认证';} ?>
+					</td>
+					<td>{$vo.organization}</td>
+					<td>{$vo.work_year}</td>
+					<td>
+						<?php if($vo['auth_work']==1){echo '已审核';}if($vo['auth_work']==2){ ?>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'work','auth'=>1])}" class="js-ajax-dialog-btn" data-msg="确定通过吗？">通过</a>
+							<br>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'work','auth'=>0])}" class="js-ajax-dialog-btn" data-msg="确定不通过吗？">不通过</a>
+						<?php }if($vo['auth_work']==0){echo '未认证';} ?>
+					</td>
+					<td>{$vo.other1}
+						<?php if($vo['other1_pic1']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['other1_pic1']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+						<?php if($vo['other1_pic2']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['other1_pic2']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+					</td>
+					<td>
+						<?php if($vo['auth_other1']==1){echo '已审核';}if($vo['auth_other1']==2){ ?>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'other1','auth'=>1])}" class="js-ajax-dialog-btn" data-msg="确定通过吗？">通过</a>
+							<br>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'other1','auth'=>0])}" class="js-ajax-dialog-btn" data-msg="确定不通过吗？">不通过</a>
+						<?php }if($vo['auth_other1']==0){echo '未认证';} ?>
+					</td>
+					<td>{$vo.other2}
+						<?php if($vo['other2_pic1']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['other2_pic1']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+						<?php if($vo['other2_pic2']){ ?>
+						<a href="javascript:parent.imagePreviewDialog('{$vo['other2_pic2']}');">
+								<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php } ?>
+					</td>
+					<td>
+						<?php if($vo['auth_other2']==1){echo '已审核';}if($vo['auth_other2']==2){ ?>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'other2','auth'=>1])}" class="js-ajax-dialog-btn" data-msg="确定通过吗？">通过</a>
+							<br>
+							<a href="{:url('gxzh/usercheck',['id'=>$vo['id'],'type'=>'other2','auth'=>0])}" class="js-ajax-dialog-btn" data-msg="确定不通过吗？">不通过</a>
+						<?php }if($vo['auth_other2']==0){echo '未认证';} ?>
+					</td>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

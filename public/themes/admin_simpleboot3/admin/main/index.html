@@ -1,0 +1,212 @@
+<include file="public@header" />
+
+</head>
+
+<body>
+    <div class="wrap">
+
+        <div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日新增用户</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_users}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日活跃用户</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_active}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日提问数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_questions}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日回答数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_answers}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- // -->
+        <div>
+
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日订单数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_orders}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">今日订单收入</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$today_orders_money}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- // -->
+
+        <div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">用户总数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$all_users}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">提问总数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$all_questions}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">回答总数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$all_answers}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">订单总数</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$all_orders}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- // -->
+        <div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">总收入</h3>
+                        </div>
+                        <div class="panel-body">
+                            {$income}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-item col-xs-3">
+                <div class="dashboard-box">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">月收入</h3>
+                        </div>
+                        <div class="panel-body">
+                            <span id="month-r">{$income_month}</span>
+                            <input type="text" class="form-control js-bootstrap-month" id="month" value="<?php echo date('Y-m'); ?>">
+                            <button type="button" id="month-s" class="btn btn-info">查询</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="grid-item col-md-12">
+    <form class="form-horizontal js-ajax-form margin-top-20" action="{:url('gxzh/push')}" method="post">
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label"><span class="form-required">*</span>群发内容</label>
+            <div class="col-md-6 col-sm-10">
+                <textarea class="form-control" name="msg" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="all" value="1">
+                <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script>
+    $(document).ready(function(){
+    
+        $("#month-s").bind("click", function() {
+            
+            var month = $("#month").val();
+
+            $.ajax({
+                url: "{:url('main/index')}", type: "post", dataType: "json", data: {month: month}, success: function (data) {
+                    if (data.code != 1) {
+                        alert('error');
+                    } else {
+                        $("#month-r").html(data.data.income_month);
+                    }
+                }
+            });
+            
+        });
+    
+    });
+    
+</script>
+</body>
+
+</html>

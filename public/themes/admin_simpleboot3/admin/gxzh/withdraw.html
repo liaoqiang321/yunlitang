@@ -1,0 +1,75 @@
+<include file="public@header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#">提现列表</a></li>
+		</ul>
+
+		<form class="well form-inline margin-top-20" method="post" action="">
+			手机号:
+			<input type="text" class="form-control" name="mobile" style="width: 200px;"
+				   value="{$data.mobile|default=''}" placeholder="">
+			订单号:
+			<input type="text" class="form-control" name="trade_sn" style="width: 200px;"
+					value="{$data.trade_sn|default=''}" placeholder="">
+			状态:
+			<select class="form-control" name="status">
+				<option value=""></option>
+				<option value="0" <?php if(isset($data['status']) && $data['status']==='0'){echo 'selected';} ?> >待审核</option>
+				<option value="1" <?php if(isset($data['status']) && $data['status']==='1'){echo 'selected';} ?> >审核通过</option>
+				<option value="2" <?php if(isset($data['status']) && $data['status']==='2'){echo 'selected';} ?> >驳回</option>
+			</select>
+			<input type="submit" class="btn btn-primary" value="搜索"/>
+		</form>
+
+		<table class="table table-hover table-bordered margin-top-20">
+			<thead>
+				<tr>
+					<th></th>
+					<th align="left">提现订单号</th>
+					<th align="left">用户</th>
+					<th align="left">提现姓名</th>
+					<th align="left">提现账户</th>
+					<th align="left">金额</th>
+					<th align="left">手续费</th>
+					<th align="left">实际到账</th>
+					<th align="left">状态</th>
+					<th align="left">驳回原因</th>
+					<th align="left">备注</th>
+					<th align="left">申请时间</th>
+					<th align="left">处理时间</th>
+					<th align="left"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="list" item="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.trade_sn}</td>
+					<td><a href="javascript:parent.openIframeLayer('{:url('gxzh/userinfo',['id'=>$vo['uid']])}','',{area: ['800px', '800px'],end:function(){ location.reload(); }});">{$vo.user_nickname}</a></td>
+					<td>{$vo.withdraw_realname}</td>
+					<td>{$vo.withdraw_account}</td>
+					<td>{$vo.money}</td>
+					<td>{$vo.fee}</td>
+					<td>{$vo.balance}</td>
+					<td>{$vo.status}</td>
+					<td>{$vo.reject}</td>
+					<td>{$vo.remarks}</td>
+					<td><?php echo date('Y-m-d H:i:s',$vo['created_at']); ?></td>
+					<td><?php echo $vo['updated_at']?date('Y-m-d H:i:s',$vo['updated_at']):''; ?></td>
+					<td>
+						<?php if($vo['status']=='待审核'){ ?>
+							<a href="{:url('gxzh/withdrawcheck',['id'=>$vo['id'],'status'=>1])}" class="js-ajax-dialog-btn" data-msg="确定吗？">通过</a>
+							<a href="javascript:parent.openIframeLayer('{:url('gxzh/withdrawcheck',['id'=>$vo['id']])}','',{area: ['500px', '300px'],end:function(){ location.reload(); }});">驳回</a>
+						<?php } ?>
+					</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
