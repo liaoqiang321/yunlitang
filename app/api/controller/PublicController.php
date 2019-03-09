@@ -1,6 +1,7 @@
 <?php
 namespace app\api\controller;
 
+use app\admin\model\ArticleModel;
 use think\Validate;
 use think\Cache;
 use think\Db;
@@ -24,6 +25,7 @@ class PublicController extends ApiBaseController
     }
     public function sendsms()
     {
+        return (uniqid());
         $validate = new Validate([
             'mobile' => 'require',
         ]);
@@ -81,7 +83,6 @@ class PublicController extends ApiBaseController
         ]);
 
         $data = $this->request->param();
-        return($this->request);
         if (!$validate->check($data)) {
             $this->error($validate->getError());
         }
@@ -101,30 +102,31 @@ class PublicController extends ApiBaseController
             $this->error($errMsg);
         }
 
-        $findUserCount = Db::name("user")->where($findUserWhere)->count();
+        $findUserCount = Db::name("ylt_user")->where($findUserWhere)->count();
 
         if ($findUserCount > 0) {
             $this->error(['code' => 2, 'msg' => '此账号已存在!']);
         }
-        if (isset($data['inviter'])) {
-            $inviter = Db::name("user")->where(['invite_code'=>$data['inviter']])->find();
-            if (empty($inviter)) {
-                //$this->error("邀请人不存在!");
-            }else{
-                $user['pid'] = $inviter['id'];
-            }
-        }
+//        if (isset($data['inviter'])) {
+//            $inviter = Db::name("user")->where(['invite_code'=>$data['inviter']])->find();
+//            if (empty($inviter)) {
+//                //$this->error("邀请人不存在!");
+//            }else{
+//                $user['pid'] = $inviter['id'];
+//            }
+//        }
 
         $user['create_time'] = time();
-        $user['user_status'] = 1;
-        $user['user_type']   = 2;
+//        $user['user_status'] = 1;
+//        $user['user_type']   = 2;
         $user['user_pass']   = cmf_password($data['password']);
         $user['token']       = $this->newToken;
-        $user['user_login']  = get_rand_str(6);
+        $user['account']  = $data['mobile'];
+        $user['mobile']  = $data['mobile'];
         $user['invite_code'] = $user['user_login'];
-        $user['user_nickname'] = $user['user_login'];
+        $user['user_nickname'] = get_rand_str(6);
 
-        $result = Db::name("user")->insertGetId($user);
+        $result = Db::name("ylt_user")->insertGetId($user);
 
         if (empty($result)) {
             $this->error("注册失败,请重试!");
@@ -132,12 +134,12 @@ class PublicController extends ApiBaseController
 
         if (!empty($data['openid']) && !empty($data['app_id'])) {
             //通过第三方登录注册的
-            Db::name("third_party_user")->where(['app_id'=>$data['app_id'],'openid'=>$data['openid']])->update(['user_id'=>$result]);
+            Db::name("ylt_third_party_user")->where(['app_id'=>$data['app_id'],'openid'=>$data['openid']])->update(['user_id'=>$result]);
         }
-        if (!empty($inviter['id'])) {
-            //上级送优惠券
-            Db::name("gxzh_coupon")->insertGetId(['uid'=>$inviter['id'],'price'=>rand(5,10)]);
-        }
+//        if (!empty($inviter['id'])) {
+//            //上级送优惠券
+//            Db::name("gxzh_coupon")->insertGetId(['uid'=>$inviter['id'],'price'=>rand(5,10)]);
+//        }
         
         $userinfo = $this->UserModel->userInfo($result);
         $this->success("注册成功!", ['token' => $this->newToken,'user' => $userinfo]);
@@ -167,7 +169,7 @@ class PublicController extends ApiBaseController
             $this->error("请输入正确的手机格式!");
         }
 
-        $findUser = Db::name("user")->where($findUserWhere)->find();
+        $findUser = Db::name("ylt_user")->where($findUserWhere)->find();
 
         if (empty($findUser)) {
             $this->error("用户不存在!");
@@ -185,7 +187,7 @@ class PublicController extends ApiBaseController
             }
         }
 
-        $result = Db::name('user')->where([
+        $result = Db::name('ylt_user')->where([
             'id'     => $findUser['id']
         ])->update(['token' => $this->newToken,'last_login_time'=>time()]);
 
@@ -377,14 +379,14 @@ class PublicController extends ApiBaseController
             $this->error('unionid为空!');
         }
 
-        $findThirdPartyUser = Db::name("third_party_user")
+        $findThirdPartyUser = Db::name("ylt_third_party_user")
             ->where('union_id', $wxUserData['unionid'])
             ->where('user_id', '>', 0)
             ->find();
 
         if ($findThirdPartyUser) {
 
-            $thisopenid = Db::name("third_party_user")
+            $thisopenid = Db::name("ylt_third_party_user")
                 ->where('union_id', $wxUserData['unionid'])
                 ->where('user_id', '>', 0)
                 ->where('openid', $openid)
@@ -393,34 +395,35 @@ class PublicController extends ApiBaseController
             if ($thisopenid) {
                 //此appid绑定过
                 $userData = [
-                    'last_login_ip'   => $this->request->ip(0, true),
-                    'last_login_time' => time(),
-                    'login_times'     => Db::raw('login_times+1'),
+//                    'last_login_ip'   => $this->request->ip(0, true),
+//                    'last_login_time' => time(),
+//                    'login_times'     => Db::raw('login_times+1'),
                     'more'            => json_encode($wxUserData),
                 ];
     
-                Db::name("third_party_user")
+                Db::name("ylt_third_party_user")
                     ->where('openid', $openid)
                     ->where('app_id', $app_id)
                     ->update($userData);
             } else {
                 //新的appid
-                Db::name("third_party_user")->insert([
+                Db::name("ylt_third_party_user")->insert([
                     'openid'          => $openid,
                     'user_id'         => $findThirdPartyUser['user_id'],
-                    'third_party'     => 'wxapp',
+//                    'third_party'     => 'wxapp',
                     'app_id'          => $app_id,
-                    'last_login_ip'   => $this->request->ip(0, true),
+//                    'last_login_ip'   => $this->request->ip(0, true),
                     'union_id'        => $wxUserData['unionid'],
-                    'last_login_time' => time(),
+//                    'last_login_time' => time(),
                     'create_time'     => time(),
-                    'login_times'     => 1,
-                    'status'          => 1,
+                    'update_time'     => time(),
+//                    'login_times'     => 1,
+//                    'status'          => 1,
                     'more'            => json_encode($wxUserData)
                 ]);
             }
 
-            Db::name('user')->where(['id'=>$findThirdPartyUser['user_id']])->update(['token'=>$this->newToken,'last_login_time'=>time()]);
+            Db::name('ylt_user')->where(['id'=>$findThirdPartyUser['user_id']])->update(['token'=>$this->newToken]);
             $userinfo = $this->UserModel->userInfo($findThirdPartyUser['user_id']);
             if($userinfo['user_status']==0){
                 $this->error('您已被拉黑!');
@@ -429,7 +432,7 @@ class PublicController extends ApiBaseController
 
         } else {
 
-            $isnew = Db::name("third_party_user")
+            $isnew = Db::name("ylt_third_party_user")
                 ->where('union_id', $wxUserData['unionid'])
                 ->where('openid', $openid)
                 ->where('app_id', $app_id)
@@ -444,23 +447,24 @@ class PublicController extends ApiBaseController
                     'more'            => json_encode($wxUserData),
                 ];
     
-                Db::name("third_party_user")
+                Db::name("ylt_third_party_user")
                     ->where('openid', $openid)
                     ->where('app_id', $app_id)
                     ->update($userData);
             }else{
                 //insert
-                Db::name("third_party_user")->insert([
+                Db::name("ylt_third_party_user")->insert([
                     'openid'          => $openid,
                     'user_id'         => 0,
-                    'third_party'     => 'wxapp',
+//                    'third_party'     => 'wxapp',
                     'app_id'          => $app_id,
-                    'last_login_ip'   => $this->request->ip(0, true),
+//                    'last_login_ip'   => $this->request->ip(0, true),
                     'union_id'        => $wxUserData['unionid'],
-                    'last_login_time' => time(),
+//                    'last_login_time' => time(),
                     'create_time'     => time(),
-                    'login_times'     => 1,
-                    'status'          => 1,
+                    'update_time'     => time(),
+//                    'login_times'     => 1,
+//                    'status'          => 1,
                     'more'            => json_encode($wxUserData)
                 ]);
             }
@@ -505,14 +509,14 @@ class PublicController extends ApiBaseController
             $this->error($errMsg);
         }
 
-        $findUser = Db::name("user")->where($findUserWhere)->find();
+        $findUser = Db::name("ylt_user")->where($findUserWhere)->find();
 
         if ($findUser) {
-            $result = Db::name('user')->where([
+            $result = Db::name('ylt_user')->where([
                 'id'     => $findUser['id']
             ])->update(['token' => $this->newToken]);
 
-            $result2 = Db::name('third_party_user')->where([
+            $result2 = Db::name('ylt_third_party_user')->where([
                 'openid' => $data['openid'],
                 'app_id' => $data['app_id'],
             ])->update(['user_id' => $findUser['id']]);

@@ -107,7 +107,7 @@ class ApiBaseController
 
         $this->token = $token;
 
-        $user = Db::name('user')
+        $user = Db::name('ylt_user')
             ->where(['token' => $token])
             ->find();
             //echo Db::getLastSql();die;

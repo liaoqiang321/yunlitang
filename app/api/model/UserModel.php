@@ -1,11 +1,19 @@
 <?php
 namespace app\api\model;
 
+use app\admin\model\ArticleModel;
 use think\Db;
 use think\Model;
 
 class UserModel extends Model
 {
+    public function hallList()
+    {
+        $hall = new ArticleModel();
+        $results = $hall->where('type', '礼堂')->select();
+        return $results;
+    }
+
     public function userInfo($id)
     {
         $userinfo = [];
