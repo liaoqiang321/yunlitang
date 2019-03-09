@@ -25,7 +25,6 @@ class PublicController extends ApiBaseController
     }
     public function sendsms()
     {
-        return (uniqid());
         $validate = new Validate([
             'mobile' => 'require',
         ]);
