@@ -704,6 +704,16 @@ class PublicController extends ApiBaseController
         $hall_type_search = $articleModel->where('hall_type_id', $id)->select();
         $this->success('成功',$hall_type_search);
     }
+    //礼堂搜索
+    public function hall_search(ArticleModel $articleModel, $keyword)
+    {
+        $hall_type_search = $articleModel->where('type', '礼堂')->where('title', 'like', '%'.$keyword.'%')->select();
+//            return $articleModel->getLastSql();
+        return $hall_type_search;
+        $this->success('成功',$hall_type_search);
+    }
+
+
     // 礼堂指数排行
     public function hall_ranking()
     {

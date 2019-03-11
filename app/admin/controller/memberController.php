@@ -14,10 +14,10 @@ use app\admin\model\InfoModel;
 use cmf\controller\AdminBaseController;
 
 /**
- * Class AppointmentController
+ * Class MemberController
  * @package app\admin\controller
  * @adminMenuRoot(
- *     'name'   =>'预约管理',
+ *     'name'   =>'会员管理',
  *     'action' =>'default',
  *     'parent' =>'',
  *     'display'=> true,
@@ -26,12 +26,12 @@ use cmf\controller\AdminBaseController;
  *     'remark' =>''
  * )
  */
-class AppointmentController extends AdminBaseController
+class MemberController extends AdminBaseController
 {
     /**
-     * 预约列表
+     * 会员列表
      * @adminMenu(
-     *     'name'   => '预约列表',
+     *     'name'   => '会员列表',
      *     'parent' => 'default',
      *     'display'=> true,
      *     'hasView'=> true,

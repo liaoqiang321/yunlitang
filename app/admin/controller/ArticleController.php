@@ -166,7 +166,7 @@ class ArticleController extends AdminBaseController
         if($this->request->isPost()){
             $hall_type = $this->request->param('hall_type');
             $hall_type_model = new HallTypeModel();
-            $result = !empty($hall_type) ? $hall_type_model->data(['type' => $hall_type])->save() : '';
+            $result = !empty($hall_type) ? $hall_type_model->data(['name' => $hall_type])->save() : '';
             if ($result) {
                 $this->success("添加成功！");
             } else {
