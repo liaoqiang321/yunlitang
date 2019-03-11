@@ -694,8 +694,9 @@ class PublicController extends ApiBaseController
         $hall = new ArticleModel();
         $hall_type = new HallTypeModel();
         $hall_type_list = $hall_type->select();
-        $hallList = $hall->where('type', '礼堂')->select();
-        $this->success('成功', ['hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
+        $default_type_id = $hall_type_list[0]['id'];
+        $hallList = $hall->where('id', $default_type_id)->where('type', '礼堂')->select();
+        $this->success('成功', ['default_hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
     }
 
     //点击礼堂分类筛选
