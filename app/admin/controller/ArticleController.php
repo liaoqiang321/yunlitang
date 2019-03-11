@@ -2,6 +2,8 @@
 namespace app\admin\controller;
 
 use app\admin\model\ArticleModel;
+use app\admin\model\HallTypeModel;
+use app\admin\model\InformationTypeModel;
 use cmf\controller\AdminBaseController;
 
 use think\Db;
@@ -63,7 +65,7 @@ class ArticleController extends AdminBaseController
             $resules['title'] = $data['title'];
             $resules['abstract'] = $data['abstract'];
             $resules['type'] = $data['type'];
-            $resules['hall_type'] = $data['hall_type'];
+            $resules['hall_type_id'] = $data['hall_type_id'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
             $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
             $resules['video'] = $data['post']['more']['video'];
@@ -76,6 +78,9 @@ class ArticleController extends AdminBaseController
                 $this->error("添加失败");
             }
         }
+        $hall_type = new HallTypeModel();
+        $hall_type_list = $hall_type->select();
+        $this->assign('hall_type_list', $hall_type_list);
         return $this->fetch();
     }
 
@@ -143,6 +148,58 @@ class ArticleController extends AdminBaseController
             $this->error("删除失败！");
         }
     }
+    /**
+     * 添加礼堂分类
+     * @adminMenu(
+     *     'name'   => 添加礼堂分类',
+     *     'parent' => 'hall',
+     *     'display'=> false,
+     *     'hasView'=> false,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '',
+     *     'param'  => ''
+     * )
+     */
+    public function hall_type_add()
+    {
+        if($this->request->isPost()){
+            $hall_type = $this->request->param('hall_type');
+            $hall_type_model = new HallTypeModel();
+            $result = !empty($hall_type) ? $hall_type_model->data(['type' => $hall_type])->save() : '';
+            if ($result) {
+                $this->success("添加成功！");
+            } else {
+                $this->error("添加失败！");
+            }
+        }
+        return $this->fetch();
+
+    }
+    /**
+     * 编辑礼堂分类
+     * @adminMenu(
+     *     'name'   => 编辑礼堂分类',
+     *     'parent' => 'hall',
+     *     'display'=> false,
+     *     'hasView'=> false,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '',
+     *     'param'  => ''
+     * )
+     */
+    public function hall_type_edit()
+    {
+        $id = $this->request->param("id", 0, 'intval');
+        $articleModel = new ArticleModel();
+        $status = $articleModel->where('id', '=', $id)->delete();
+        if ($status) {
+            $this->success("删除成功！", url('article/hall'));
+        } else {
+            $this->error("删除失败！");
+        }
+    }
 
 
     /**
@@ -186,7 +243,7 @@ class ArticleController extends AdminBaseController
             $resules['title'] = $data['title'];
             $resules['abstract'] = $data['abstract'];
             $resules['type'] = $data['type'];
-            $resules['information_type'] = $data['information_type'];
+            $resules['information_type_id'] = $data['information_type_id'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
             $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
 //            $resules['video'] = $data['post']['more']['video'];
@@ -199,6 +256,9 @@ class ArticleController extends AdminBaseController
                 $this->error("添加失败");
             }
         }
+        $information_type = new InformationTypeModel();
+        $information_type_list = $information_type->select();
+        $this->assign('information_type_list', $information_type_list);
         return $this->fetch();
     }
 
@@ -264,6 +324,33 @@ class ArticleController extends AdminBaseController
         } else {
             $this->error("删除失败！");
         }
+    }
+    /**
+     * 添加资讯分类
+     * @adminMenu(
+     *     'name'   => '添加资讯分类',
+     *     'parent' => 'information',
+     *     'display'=> false,
+     *     'hasView'=> false,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '',
+     *     'param'  => ''
+     * )
+     */
+    public function information_type_add()
+    {
+        if($this->request->isPost()){
+            $information_type = $this->request->param('information_type');
+            $information_type_model = new InformationTypeModel();
+            $result = !empty($information_type) ? $information_type_model->data(['name' => $information_type])->save() : '';
+            if ($result) {
+                $this->success("添加成功！");
+            } else {
+                $this->error("添加失败！");
+            }
+        }
+        return $this->fetch();
     }
 
     /**

@@ -16,15 +16,16 @@
     <ul class="nav nav-tabs">
         <li><a href="{:url('article/information')}">资讯列表</a></li>
         <li class="active"><a href="{:url('article/information_add')}">添加资讯</a></li>
+        <li><a href="{:url('article/information_type_add')}">添加资讯分类</a></li>
     </ul>
     <form class="form-horizontal js-ajax-form margin-top-20" action="{:url('article/information_add')}" method="post">
         <input type="hidden" name="type" value="资讯">
         <div class="form-group">
             <label for="hall_name" class="col-sm-2 control-label"><span class="form-required">*</span>资讯分类</label>
-                <select name="information_type">
-                    <option value="本地">本地</option>
-                    <option value="娱乐">娱乐</option>
-                    <option value="礼堂">礼堂</option>
+                <select name="information_type_id">
+                    <foreach name="information_type_list" item="vo">
+                        <option value="{$vo.id}">{$vo.name}</option>
+                    </foreach>
                 </select>
         </div>
         <div class="form-group">

@@ -2,6 +2,8 @@
 namespace app\api\controller;
 
 use app\admin\model\ArticleModel;
+use app\admin\model\HallTypeModel;
+use think\Request;
 use think\Validate;
 use think\Cache;
 use think\Db;
@@ -40,15 +42,15 @@ class PublicController extends ApiBaseController
         }
 
         //限制 每个ip 的发送次数
-        $clientIp = $this->request->ip(0, true);
-        if (Cache::get($clientIp)) {
-            Cache::inc($clientIp);
-        } else {
-            Cache::set($clientIp, 1, 600);
-        }
-        if (Cache::get($clientIp) > 20) {
-            $this->error('请稍后再试');
-        }
+//        $clientIp = $this->request->ip(0, true);
+//        if (Cache::get($clientIp)) {
+//            Cache::inc($clientIp);
+//        } else {
+//            Cache::set($clientIp, 1, 600);
+//        }
+//        if (Cache::get($clientIp) > 20) {
+//            $this->error('请稍后再试');
+//        }
         //测试后开启
         //$code = cmf_get_verification_code($data['mobile']);
         //if (empty($code)) {
@@ -58,8 +60,9 @@ class PublicController extends ApiBaseController
 
         cmf_verification_code_log($data['mobile'], $code);
 
-        $res = sendsms($data['mobile'],$code);
-        
+//        $res = sendsms($data['mobile'],$code);***********************************************************************验证码临时注释***************************************
+        $res = 1;
+
         if ($res) {
             $this->success('验证码已经发送成功!');
         } else{
@@ -96,34 +99,27 @@ class PublicController extends ApiBaseController
             $this->error("请输入正确的手机格式!");
         }
 
-        $errMsg = cmf_check_verification_code($data['mobile'], $data['verification_code']);
-        if (!empty($errMsg)) {
-            $this->error($errMsg);
-        }
+//        $errMsg = cmf_check_verification_code($data['mobile'], $data['verification_code']);************************************验证码临时注释3行*****************************************
+//        if (!empty($errMsg)) {
+//            $this->error($errMsg);
+//        }
 
         $findUserCount = Db::name("ylt_user")->where($findUserWhere)->count();
 
         if ($findUserCount > 0) {
             $this->error(['code' => 2, 'msg' => '此账号已存在!']);
         }
-//        if (isset($data['inviter'])) {
-//            $inviter = Db::name("user")->where(['invite_code'=>$data['inviter']])->find();
-//            if (empty($inviter)) {
-//                //$this->error("邀请人不存在!");
-//            }else{
-//                $user['pid'] = $inviter['id'];
-//            }
-//        }
 
         $user['create_time'] = time();
+        $user['update_time'] = time();
 //        $user['user_status'] = 1;
 //        $user['user_type']   = 2;
-        $user['user_pass']   = cmf_password($data['password']);
+        $user['password']   = cmf_password($data['password']);
         $user['token']       = $this->newToken;
         $user['account']  = $data['mobile'];
         $user['mobile']  = $data['mobile'];
-        $user['invite_code'] = $user['user_login'];
-        $user['user_nickname'] = get_rand_str(6);
+//        $user['invite_code'] = $user['user_login'];
+        $user['nick_name'] = get_rand_str(6);
 
         $result = Db::name("ylt_user")->insertGetId($user);
 
@@ -174,21 +170,21 @@ class PublicController extends ApiBaseController
             $this->error("用户不存在!");
         } else {
 
-            switch ($findUser['user_status']) {
-                case 0:
-                    $this->error('您已被拉黑!');
-                case 2:
-                    $this->error('账户还没有验证成功!');
-            }
+//            switch ($findUser['user_status']) {
+//                case 0:
+//                    $this->error('您已被拉黑!');
+//                case 2:
+//                    $this->error('账户还没有验证成功!');
+//            }
 
-            if (!cmf_compare_password($data['password'], $findUser['user_pass'])) {
+            if (!cmf_compare_password($data['password'], $findUser['password'])) {
                 $this->error("密码不正确!");
             }
         }
 
         $result = Db::name('ylt_user')->where([
             'id'     => $findUser['id']
-        ])->update(['token' => $this->newToken,'last_login_time'=>time()]);
+        ])->update(['token' => $this->newToken]);
 
 
         if (empty($result)) {
@@ -540,20 +536,20 @@ class PublicController extends ApiBaseController
             if (empty($user)) {
                 $this->success("注册新用户!", ['action'=>'register']);
             }
-            $openid = Db::name('third_party_user')->where(['user_id'=>$user['id'],'third_party'=>'wxapp'])->value('openid');
+            $openid = Db::name('ylt_third_party_user')->where(['user_id'=>$user['id'],'third_party'=>'wxapp'])->value('openid');
             if (empty($openid)) {
                 $this->success("绑定用户!", ['action'=>'binduser']);
             } elseif (!empty($openid)) {
                 $this->error("该用户已绑定过微信账号!");
             }
         } elseif ($type == 'mobile') {
-            $user = Db::name('user')->where(['mobile'=>$data['mobile']])->find();
+            $user = Db::name('ylt_user')->where(['mobile'=>$data['mobile']])->find();
             if (empty($user)) {
                 $this->error("新注册可以发送验证码!");
             }
             $this->success("该手机号已注册!");
         } elseif ($type == 'password') {
-            $user = Db::name('user')->where(['mobile'=>$data['mobile']])->find();
+            $user = Db::name('ylt_user')->where(['mobile'=>$data['mobile']])->find();
             if (empty($user)) {
                 $this->error("该账号不存在!");
             }
@@ -570,14 +566,14 @@ class PublicController extends ApiBaseController
             $list[$v['slide_id']][] = $v;
         }
         $list = array_values($list);
-        $this->success("",['slide1'=>$list[0],'slide2'=>$list[1]]);
+        $this->success("",['slide1'=>$list[0],'slide2'=>$list[1], 'slide3'=>$list[2]]);
     }
     public function aboutus()
     {
         //关于我们
         $result = Db::name('ylt_info')->select();
         $aboutus = $result['about'];
-        $this->success("",$aboutus);
+        $this->success("公告",$aboutus);
     }
     public function search_condition()
     {
@@ -690,5 +686,68 @@ class PublicController extends ApiBaseController
         //var_dump($list);die;
         
         $this->success("成功!",$list);
+    }
+
+//    礼堂列表
+    public function hall_list()
+    {
+        $hall = new ArticleModel();
+        $hall_type = new HallTypeModel();
+        $hall_type_list = $hall_type->select();
+        $hallList = $hall->where('type', '礼堂')->select();
+        $this->success('成功', ['hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
+    }
+
+    //点击礼堂分类筛选
+    public function hall_type_search(ArticleModel $articleModel, $id)
+    {
+        $hall_type_search = $articleModel->where('hall_type_id', $id)->select();
+        $this->success('成功',$hall_type_search);
+    }
+    // 礼堂指数排行
+    public function hall_ranking()
+    {
+        $hall = new ArticleModel();
+        $hallList = $hall->where('type', '礼堂')->select();
+        $this->success('成功', $hallList);
+
+    }
+    //    工作资讯列表
+    public function information_list()
+    {
+        $information = new ArticleModel();
+        $information_type = new HallTypeModel();
+        $information_type_list = $information_type->select();
+        $informationList = $information->where('type', '礼堂')->select();
+        $this->success('成功', ['hall_list' => $informationList, 'hall_type_list' => $information_type_list]);
+    }
+
+    //点击工作咨询分类进入详情
+    public function information_type_search(ArticleModel $articleModel, $id)
+    {
+        $information_type_search = $articleModel->where('hall_type_id', $id)->select();
+        $this->success('成功',$information_type_search);
+    }
+
+    //    文化机构列表
+    public function group_list()
+    {
+        $group = new ArticleModel();
+        $groupList = $group->where('type', '机构团体')->select();
+        $this->success('成功', $groupList);
+    }
+    //    志愿者列表
+    public function volunteer_list()
+    {
+        $volunteer = new ArticleModel();
+        $volunteerList = $volunteer->where('type', '志愿者')->select();
+        $this->success('成功', $volunteerList);
+    }
+    //    志愿者列表
+    public function apportionment_record()
+    {
+        $volunteer = new ArticleModel();
+        $volunteerList = $volunteer->where('type', '志愿者')->select();
+        $this->success('成功', $volunteerList);
     }
 }

@@ -1,0 +1,22 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('article/hall')}">资讯列表</a></li>
+        <li><a href="{:url('article/hall_add')}">添加资讯</a></li>
+        <li class="active"><a href="{:url('article/information_type_add')}">添加资讯分类</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20" action="{:url('article/information_type_add')}" method="post">
+        <lable id="hall_type">添加资讯分类</lable>
+        <input type="text" name="information_type">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
