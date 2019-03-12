@@ -734,14 +734,6 @@ class PublicController extends ApiBaseController
         $hallList = $hall->where('id', $default_type_id)->where('type', '礼堂')->select();
         $this->success('成功', ['hall_type_list' => $hall_type_list, 'default_hall_list' => $hallList]);
     }
-
-
-
-
-
-
-
-
     //礼堂模糊搜索
     public function hall_search(ArticleModel $articleModel, $keyword)
     {
@@ -755,9 +747,27 @@ class PublicController extends ApiBaseController
     // 礼堂指数排行
     public function hall_ranking()
     {
+        $hall_type = new HallTypeModel();
+        $hall_type_list = $hall_type->select();
         $hall = new ArticleModel();
+        $hall_list = $hall->where('type', '礼堂')->select();
+        foreach ($hall_type_list as $value){
+            $temp = [];
+            foreach ($hall_list as $key => $item){
+                if($value['id'] == $item['hall_type_id']){
+                    if(!empty($item['cover'])){
+                        $item['cover'] = $this->request->domain() . '/'. $item['cover'];
+                    }
+                    $temp[] = $item;
+                    $value['data'] = $temp;
+                }
+            }
+        }
         $hallList = $hall->where('type', '礼堂')->select();
-        $this->success('成功', $hallList);
+        $this->success('成功', ['hall_type_list' => $hall_type_list, 'default_hall_list' => $hallList]);
+//        $hall = new ArticleModel();
+//        $hallList = $hall->where('type', '礼堂')->select();
+//        $this->success('成功', $hallList);
 
     }
     //    工作资讯列表
