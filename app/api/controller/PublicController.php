@@ -3,6 +3,7 @@ namespace app\api\controller;
 
 use app\admin\model\ArticleModel;
 use app\admin\model\HallTypeModel;
+use app\admin\model\InformationTypeModel;
 use think\Request;
 use think\Validate;
 use think\Cache;
@@ -760,7 +761,7 @@ class PublicController extends ApiBaseController
             $this->success('成功',['default_hall_list' => $default_hall_list, 'hall_type_list' => $hall_type_list]);
         }
         if($id == 9999){
-            $hall_type_search = $hall->where('hall_type_id', 9999)->select();
+            $hall_type_search = $hall->where('type', '礼堂')->select();
         }else{
             $hall_type_search = $hall->where('hall_type_id', $id)->select();
         }
@@ -771,24 +772,50 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功',['default_hall_list' => $hall_type_search, 'hall_type_list' => $hall_type_list]);
 
-//        $hallList = $hall->where('type', '礼堂')->select();
     }
     //    工作资讯列表
     public function information_list()
     {
         $information = new ArticleModel();
-        $information_type = new HallTypeModel();
+        $information_type = new InformationTypeModel();
         $information_type_list = $information_type->select();
-        $informationList = $information->where('type', '礼堂')->select();
-        $this->success('成功', ['hall_list' => $informationList, 'hall_type_list' => $information_type_list]);
+        $information_type_list = json_decode($information_type_list);
+        $arr1 = ['id' => 7777,'name' => '最新' ];
+        $arr2 = ['id' => 8888,'name' => '最热' ];
+        array_unshift($information_type_list, $arr2);
+        array_unshift($information_type_list, $arr1);
+        $informationList = $information->where('type', '礼堂')->order('create_time', 'desc')->select();
+        $this->success('成功', ['default_hall_list' => $informationList, 'hall_type_list' => $information_type_list]);
+    }
+    //点击资讯分类进行筛选
+    public function information_type_search()
+    {
+        $information = new ArticleModel();
+        $information_type = new InformationTypeModel();
+        $id = $this->request->param('id');
+        if($id == 777){
+            $default_hall_list = $information->where('type', '资讯')->order('create_time', 'desc')->select();
+        }elseif ($id == 888){
+            //******************************************************************************************************************************热门暂时未定**************************
+            $default_hall_list = $information->where('type', '资讯')->order('create_time', 'desc')->select();
+        }else{
+            $default_hall_list = $information->where('type', '资讯')->where('information_type_id', $id)->select();
+        }
+        $information_type_list = $information_type->select();
+        $information_type_list = json_decode($information_type_list);
+        $arr1 = ['id' => 7777,'name' => '最新' ];
+        $arr2 = ['id' => 8888,'name' => '最热' ];
+        array_unshift($information_type_list, $arr2);
+        array_unshift($information_type_list, $arr1);
+        $this->success('成功', ['default_hall_list' => $default_hall_list, 'hall_type_list' => $information_type_list]);
     }
 
     //点击工作咨询分类进入详情
-    public function information_type_search(ArticleModel $articleModel, $id)
-    {
-        $information_type_search = $articleModel->where('hall_type_id', $id)->select();
-        $this->success('成功',$information_type_search);
-    }
+//    public function information_type_search(ArticleModel $articleModel, $id)
+//    {
+//        $information_type_search = $articleModel->where('hall_type_id', $id)->select();
+//        $this->success('成功',$information_type_search);
+//    }
 
     //    文化机构列表
     public function group_list()
