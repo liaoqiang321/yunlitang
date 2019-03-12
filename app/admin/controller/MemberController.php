@@ -14,10 +14,10 @@ use app\admin\model\InfoModel;
 use cmf\controller\AdminBaseController;
 
 /**
- * Class MemberController
+ * Class AppointmentController
  * @package app\admin\controller
  * @adminMenuRoot(
- *     'name'   =>'会员管理',
+ *     'name'   =>'预约管理',
  *     'action' =>'default',
  *     'parent' =>'',
  *     'display'=> true,
@@ -26,12 +26,12 @@ use cmf\controller\AdminBaseController;
  *     'remark' =>''
  * )
  */
-class MemberController extends AdminBaseController
+class AppointmentController extends AdminBaseController
 {
     /**
-     * 会员列表
+     * 预约列表
      * @adminMenu(
-     *     'name'   => '会员列表',
+     *     'name'   => '预约列表',
      *     'parent' => 'default',
      *     'display'=> true,
      *     'hasView'=> true,
@@ -53,6 +53,40 @@ class MemberController extends AdminBaseController
         return $this->fetch();
     }
 
+
+    /**
+     * 预约审核
+     * @adminMenu(
+     *     'name'   => '预约审核',
+     *     'parent' => 'appointment',
+     *     'display'=> false,
+     *     'hasView'=> true,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '',
+     *     'param'  => ''
+     * )
+     */
+    public function appointment_verify()
+    {
+        $data = $this->request->param();
+        if (!empty($data['status'])) {
+            $appointment = new AppointmentModel();
+            if($data['status'] == 1){
+                $results = $appointment->where('id', '=', $data['id'])->update(['status' => '1', 'update_time' => time()]);
+            }elseif ($data['status'] == 2){
+                $refuse_reason = $data['refuse_reason'] ?: '';
+                $results = $appointment->where('id', '=', $data['id'])->update(['status' => '2', 'refuse_reason' => $refuse_reason, 'update_time' => time()]);
+            }
+            if ($results) {
+                $this->success("添加成功");
+            } else {
+                $this->error("添加失败");
+            }
+        }
+        $this->assign('data', $data);
+        return $this->fetch();
+    }
 
     /**
      * 添加预约
@@ -153,6 +187,45 @@ class MemberController extends AdminBaseController
         } else {
             $this->error("删除失败！");
         }
+    }
+
+    /**
+     * 关于云礼堂
+     * @adminMenu(
+     *     'name'   => '关于云礼堂',
+     *     'parent' => 'admin/Setting/default',
+     *     'display'=> true,
+     *     'hasView'=> true,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '',
+     *     'param'  => ''
+     * )
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function about()
+    {
+        $data = new InfoModel();
+        if($this->request->isPost()){
+            $about = $this->request->param('about');
+            $tem = $data->find(1);
+            if ($tem){
+                $result = $data->where('id', '=', 1)->update(['about' => htmlspecialchars_decode($about)]);
+            }else{
+                $result = '';
+            }
+
+            if($result){
+                $this->success('保存成功');
+            }else{
+                $this->error('保存失败');
+            }
+        }
+        $this->assign('data', $data);
+        return $this->fetch();
     }
 
 
