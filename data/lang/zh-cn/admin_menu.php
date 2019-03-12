@@ -112,6 +112,8 @@ return array (
   'ADMIN_MAILER_TEMPLATE' => '邮件模板',
   'ADMIN_MAILER_TEMPLATEPOST' => '邮件模板提交',
   'ADMIN_MAILER_TEST' => '邮件发送测试',
+  'ADMIN_MEMBER_DEFAULT' => '会员管理',
+  'ADMIN_MEMBER_MEMBER' => '会员列表',
   'ADMIN_MENU_ADD' => '后台菜单添加',
   'ADMIN_MENU_ADDPOST' => '后台菜单添加提交保存',
   'ADMIN_MENU_DELETE' => '后台菜单删除',

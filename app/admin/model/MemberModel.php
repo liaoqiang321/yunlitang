@@ -12,9 +12,9 @@ namespace app\admin\model;
 
 use think\Model;
 
-class AppointmentModel extends Model
+class MemberModel extends Model
 {
-    protected $table = 'cmf_ylt_appointment';
+    protected $table = 'cmf_ylt_user';
     protected $autoWriteTimestamp = true;
 //    public function comment()
 //    {
