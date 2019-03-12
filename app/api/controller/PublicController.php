@@ -689,57 +689,58 @@ class PublicController extends ApiBaseController
     }
 
 //    礼堂列表
-//    public function hall_list()
-//    {
-//        $hall = new ArticleModel();
-//        $hall_type = new HallTypeModel();
-//        $hall_type_list = $hall_type->select();
-//        $default_type_id = $hall_type_list[0]['id'];
-//        $hallList = $hall->where('id', $default_type_id)->where('type', '礼堂')->select();
-//        foreach($hallList as $value){
-//            $value['cover'] = $this->request->domain() . '/'. $value['cover'];
-//        }
-//        $this->success('成功', ['default_hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
-//    }
-
-//    //点击礼堂分类筛选
-//    public function hall_type_search(ArticleModel $articleModel, $id)
-//    {
-//        $hall_type_search = $articleModel->where('hall_type_id', $id)->select();
-//        foreach($hall_type_search as $value){
-//            $value['cover'] = $this->request->domain() . '/'. $value['cover'];
-//        }
-//        $this->success('成功',$hall_type_search);
-//    }
-    //    礼堂列表
     public function hall_list()
     {
+        $hall = new ArticleModel();
         $hall_type = new HallTypeModel();
         $hall_type_list = $hall_type->select();
-        $hall = new ArticleModel();
-        $hall_list = $hall->where('type', '礼堂')->select();
-        foreach ($hall_type_list as $value){
-            $temp = [];
-            foreach ($hall_list as $key => $item){
-                if($value['id'] == $item['hall_type_id']){
-                    if(!empty($item['cover'])){
-                        $item['cover'] = $this->request->domain() . '/'. $item['cover'];
-                    }
-                    $temp[] = $item;
-                    $value['data'] = $temp;
-                }
+        $default_type_id = $hall_type_list[0]['id'];
+        $hallList = $hall->where('hall_type_id', $default_type_id)->where('type', '礼堂')->select();
+        foreach($hallList as $value){
+            $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+        }
+        $this->success('成功', ['default_hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
+    }
+
+//    //点击礼堂分类筛选
+    public function hall_type_search(ArticleModel $articleModel, $id)
+    {
+        $hall_type_search = $articleModel->where('hall_type_id', $id)->select();
+        foreach($hall_type_search as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
             }
         }
-        $default_type_id = $hall_type_list[0]['id'];
-        $hallList = $hall->where('id', $default_type_id)->where('type', '礼堂')->select();
-        $this->success('成功', ['hall_type_list' => $hall_type_list, 'default_hall_list' => $hallList]);
+        $this->success('成功',['default_hall_list' => $hall_type_search]);
     }
+//    //    礼堂列表
+//    public function hall_list()
+//    {
+//        $hall_type = new HallTypeModel();
+//        $hall_type_list = $hall_type->select();
+//        $hall = new ArticleModel();
+//        $hall_list = $hall->where('type', '礼堂')->select();
+//        foreach ($hall_type_list as $value){
+//            $temp = [];
+//            foreach ($hall_list as $key => $item){
+//                if($value['id'] == $item['hall_type_id']){
+//                    if(!empty($item['cover'])){
+//                        $item['cover'] = $this->request->domain() . '/'. $item['cover'];
+//                    }
+//                    $temp[] = $item;
+//                    $value['data'] = $temp;
+//                }
+//            }
+//        }
+//        $default_type_id = $hall_type_list[0]['id'];
+//        $hallList = $hall->where('id', $default_type_id)->where('type', '礼堂')->select();
+//        $this->success('成功', ['hall_type_list' => $hall_type_list, 'default_hall_list' => $hallList]);
+//    }
     //礼堂模糊搜索
     public function hall_search(ArticleModel $articleModel, $keyword)
     {
         $hall_type_search = $articleModel->where('type', '礼堂')->where('title', 'like', '%'.$keyword.'%')->select();
 //            return $articleModel->getLastSql();
-        return $hall_type_search;
         $this->success('成功',$hall_type_search);
     }
 
@@ -747,28 +748,30 @@ class PublicController extends ApiBaseController
     // 礼堂指数排行
     public function hall_ranking()
     {
+        $id = $this->request->param('id');
+        $hall = new ArticleModel();
         $hall_type = new HallTypeModel();
         $hall_type_list = $hall_type->select();
-        $hall = new ArticleModel();
-        $hall_list = $hall->where('type', '礼堂')->select();
-        foreach ($hall_type_list as $value){
-            $temp = [];
-            foreach ($hall_list as $key => $item){
-                if($value['id'] == $item['hall_type_id']){
-                    if(!empty($item['cover'])){
-                        $item['cover'] = $this->request->domain() . '/'. $item['cover'];
-                    }
-                    $temp[] = $item;
-                    $value['data'] = $temp;
-                }
+        $hall_type_list =  json_decode($hall_type_list, true);
+        $arr1 = ['id' => 9999, 'name' => '全部'];
+        array_unshift($hall_type_list, $arr1);
+        if(empty($id)){
+            $default_hall_list = $hall->where('type', '礼堂')->select();
+            $this->success('成功',['default_hall_list' => $default_hall_list, 'hall_type_list' => $hall_type_list]);
+        }
+        if($id == 9999){
+            $hall_type_search = $hall->where('hall_type_id', 9999)->select();
+        }else{
+            $hall_type_search = $hall->where('hall_type_id', $id)->select();
+        }
+        foreach($hall_type_search as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
             }
         }
-        $hallList = $hall->where('type', '礼堂')->select();
-        $this->success('成功', ['hall_type_list' => $hall_type_list, 'default_hall_list' => $hallList]);
-//        $hall = new ArticleModel();
-//        $hallList = $hall->where('type', '礼堂')->select();
-//        $this->success('成功', $hallList);
+        $this->success('成功',['default_hall_list' => $hall_type_search, 'hall_type_list' => $hall_type_list]);
 
+//        $hallList = $hall->where('type', '礼堂')->select();
     }
     //    工作资讯列表
     public function information_list()
