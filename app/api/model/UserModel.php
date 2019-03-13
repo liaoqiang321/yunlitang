@@ -10,6 +10,16 @@ class UserModel extends Model
     protected $table = 'cmf_ylt_user';
     protected $autoWriteTimestamp = true;
 
+    public function get_comment_user($list)
+    {
+        foreach ($list as $item){
+            $user_info = $this->where('id', $item['user_id'])->find();
+            $item['nick_name'] = $user_info['nick_name'];
+            $item['avatar'] = $user_info['avatar'];
+            $item['camera_user_id'] = $user_info['id'];
+        }
+        return $list;
+    }
 //    public function hallList()
 //    {
 //        $hall = new ArticleModel();

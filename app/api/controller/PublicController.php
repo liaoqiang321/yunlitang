@@ -716,7 +716,7 @@ class PublicController extends ApiBaseController
         $hall_type_search = $articleModel->where('hall_type_id', $id)->select();
         foreach($hall_type_search as $value){
             if(!empty($value['cover'])){
-                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
             }
         }
         $this->success('成功',['default_hall_list' => $hall_type_search]);
@@ -785,6 +785,11 @@ class PublicController extends ApiBaseController
         array_unshift($hall_type_list, $arr1);
         if(empty($id)){
             $default_hall_list = $hall->where('type', '礼堂')->select();
+            foreach($default_hall_list as $value){
+                if(!empty($value['cover'])){
+                    $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+                }
+            }
             $this->success('成功',['default_hall_list' => $default_hall_list, 'hall_type_list' => $hall_type_list]);
         }
         if($id == 9999){
@@ -794,7 +799,7 @@ class PublicController extends ApiBaseController
         }
         foreach($hall_type_search as $value){
             if(!empty($value['cover'])){
-                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
             }
         }
         $this->success('成功',['default_hall_list' => $hall_type_search, 'hall_type_list' => $hall_type_list]);
@@ -841,12 +846,22 @@ class PublicController extends ApiBaseController
         $arr2 = ['id' => 8888,'name' => '最热' ];
         array_unshift($information_type_list, $arr2);
         array_unshift($information_type_list, $arr1);
+        foreach($default_hall_list as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
         $this->success('成功', ['default_hall_list' => $default_hall_list, 'hall_type_list' => $information_type_list]);
     }
     //工作咨询分类模糊搜索
     public function information_search(ArticleModel $articleModel, $keyword)
     {
         $hall_type_search = $articleModel->where('type', '资讯')->where('title', 'like', '%'.$keyword.'%')->select();
+        foreach($hall_type_search as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
 //            return $articleModel->getLastSql();
         $this->success('成功',$hall_type_search);
     }
@@ -876,6 +891,11 @@ class PublicController extends ApiBaseController
     {
         $group = new ArticleModel();
         $groupList = $group->where('type', '机构团体')->select();
+        foreach($groupList as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
         $this->success('成功', $groupList);
     }
     //    志愿者列表
@@ -883,6 +903,11 @@ class PublicController extends ApiBaseController
     {
         $volunteer = new ArticleModel();
         $volunteerList = $volunteer->where('type', '志愿者')->select();
+        foreach($volunteerList as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
         $this->success('成功', $volunteerList);
     }
     //    查看文章评论
@@ -891,11 +916,16 @@ class PublicController extends ApiBaseController
         $user = new UserModel();
         $article_id = $this->request->param('article_id');
         $comment_list = $commentModel->where('article_id', $article_id)->select();
-        foreach ($comment_list as $item){
-            $user_info = $user->where('id', $item['user_id'])->find();
-            $item['nick_name'] = $user_info['nick_name'];
-            $item['avatar'] = $user_info['avatar'];
-        }
+        $comment_list = $user->get_comment_user($comment_list);
         $this->success('成功', $comment_list);
+    }
+    //随手拍列表
+    public function camera_list()
+    {
+        $user = new UserModel();
+        $camera = new ArticleModel();
+        $camera_list = $camera->field('id, title, cover, content create_time')->where('type', '随手拍')->select();
+        $camera_list = $user->get_comment_user($camera_list);
+        $this->success('成功',$camera_list);
     }
 }

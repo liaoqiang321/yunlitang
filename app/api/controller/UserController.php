@@ -38,7 +38,7 @@ class UserController extends ApiBaseController
     }
     public function logout()
     {
-        Db::name('user')->where([
+        Db::name('ylt_user')->where([
             'id'     => $this->userId
         ])->update(['token' => null]);
 

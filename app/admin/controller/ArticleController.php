@@ -62,16 +62,17 @@ class ArticleController extends AdminBaseController
     {
         if ($this->request->isPost()) {
             $data   = $this->request->param();
-//            return $data;
-            $resules['title'] = $data['title'];
-            $resules['abstract'] = $data['abstract'];
-            $resules['type'] = $data['type'];
-            $resules['hall_type_id'] = $data['hall_type_id'];
-            $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
-            $resules['cover'] = isset($data['cover']) ? json_encode($data['cover']) : '';
-            $resules['video'] = $data['post']['more']['video'];
+//            return isset($data['cover']);
+            $results['title'] = $data['title'];
+            $results['abstract'] = $data['abstract'];
+            $results['type'] = $data['type'];
+            $results['hall_type_id'] = $data['hall_type_id'];
+            $results['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
+            $results['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
+//            return $results;
+            $results['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
-            $hall->data($resules);
+            $hall->data($results);
             $result = $hall->save();
             if ($result) {
                 $this->success("添加成功", url("article/hall_add"));
@@ -105,7 +106,7 @@ class ArticleController extends AdminBaseController
             $result['title'] = $data['title'];
             $result['abstract'] = $data['abstract'];
 //            $result['type'] = $data['type'];
-            $result['hall_type'] = $data['hall_type'];
+            $result['hall_type_id'] = $data['hall_type_id'];
             $result['content'] = htmlspecialchars_decode($data['content']);
             $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
             $result['video'] = $data['post']['more']['video'];
@@ -120,8 +121,11 @@ class ArticleController extends AdminBaseController
             }
         }
         $articleModel = new ArticleModel();
+        $hall_type = new HallTypeModel();
+        $hall_type_list = $hall_type->select();
         $datas = $articleModel->find($data['id']);
         $this->assign("datas", $datas);
+        $this->assign("hall_type_list", $hall_type_list);
         return $this->fetch();
     }
 
@@ -592,40 +596,6 @@ class ArticleController extends AdminBaseController
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 随手拍管理
      * @adminMenu(
@@ -642,43 +612,8 @@ class ArticleController extends AdminBaseController
     public function camera()
     {
         $articleModel = new ArticleModel();
-        $camera = $articleModel->order('id', 'desc')->paginate('10');
+        $camera = $articleModel->where('type', '随手拍')->order('id', 'desc')->paginate('10');
         $this->assign("camera", $camera);
-        return $this->fetch();
-    }
-
-    /**
-     * 添加随手拍
-     * @adminMenu(
-     *     'name'   => '添加随手拍',
-     *     'parent' => 'camera',
-     *     'display'=> false,
-     *     'hasView'=> true,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '',
-     *     'param'  => ''
-     * )
-     */
-    public function camera_add()
-    {
-        if ($this->request->isPost()) {
-            $data   = $this->request->param();
-            $resules['title'] = $data['title'];
-            $resules['abstract'] = $data['abstract'];
-            $resules['type'] = $data['type'];
-            $resules['content'] = isset($data['content']) ? $data['content'] : '';
-            $resules['image'] = isset($data['image']) ? $data['image'] : '';
-//            $resules['video'] = $data['post']['more']['video'];
-            $camera = new ArticleModel();
-            $camera->data($resules);
-            $result = $camera->save();
-            if ($result) {
-                $this->success("添加成功", url("article/camera_add"));
-            } else {
-                $this->error("添加失败");
-            }
-        }
         return $this->fetch();
     }
 

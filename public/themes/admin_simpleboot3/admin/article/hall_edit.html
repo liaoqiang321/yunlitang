@@ -21,12 +21,10 @@
     <form class="form-horizontal js-ajax-form margin-top-20" action="{:url('article/hall_edit')}" method="post">
         <div class="form-group">
             <label for="hall_name" class="col-sm-2 control-label"><span class="form-required">*</span>礼堂分类</label>
-            <select name="hall_type">
-                <option value="路桥街道">路桥街道</option>
-                <option value="路南街道">路南街道</option>
-                <option value="路北街道">路北街道</option>
-                <option value="螺洋街道">螺洋街道</option>
-                <option value="桐屿街道">桐屿街道</option>
+            <select name="hall_type_id">
+                <foreach name="hall_type_list" item="vo">
+                    <option  value="{$vo.id}">{$vo.name}</option>
+                </foreach>
             </select>
         </div>
         <div class="form-group">

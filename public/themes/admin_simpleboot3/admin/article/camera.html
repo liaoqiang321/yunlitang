@@ -17,7 +17,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<foreach name="hall" item="vo">
+				<foreach name="camera" item="vo">
 				<tr>
 					<td>{$vo.id}</td>
 					<td>{$vo.type}</td>
@@ -25,15 +25,15 @@
 					<td>{$vo.abstract}</td>
 					<td>{$vo.cover}</td>
 					<td>
-						<a class="btn btn-xs btn-primary" href="{:url('article/hall_edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
-						<a class="btn btn-xs btn-danger js-ajax-delete" class="" href="{:url('article/hall_delete',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
+						<a class="btn btn-xs btn-primary" href="{:url('article/camera_edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
+						<a class="btn btn-xs btn-danger js-ajax-delete" class="" href="{:url('article/camera_delete',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>
 					</td>
 				</tr>
 				</foreach>
 			</tbody>
 		</table>
 		<div style="display:flex;justify-content:center;align-items:center;">
-			<div class="pagination">{$hall->render()|default=''}</div>
+			<div class="pagination">{$camera->render()|default=''}</div>
 		</div>
 	</div>
 	<script src="__STATIC__/js/admin.js"></script>
