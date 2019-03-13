@@ -9,6 +9,7 @@ class UserModel extends Model
 {
     protected $table = 'cmf_ylt_user';
     protected $autoWriteTimestamp = true;
+
 //    public function hallList()
 //    {
 //        $hall = new ArticleModel();

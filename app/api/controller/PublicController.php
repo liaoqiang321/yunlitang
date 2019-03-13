@@ -728,8 +728,12 @@ class PublicController extends ApiBaseController
         $article_id = $request['article_id'];
         $hall_detail = $articleModel->where('id', $article_id)->find();
         $hall_detail['cover'] = json_decode($hall_detail['cover']);
-        foreach ($hall_detail['cover'] as $key => $item){
+        if (!empty($hall_detail['cover'])){
+            foreach ($hall_detail['cover'] as $key => $item){
                 $data[$key] = $this->request->domain() . '/upload/'. $item;
+            }
+        }else{
+            $data = '';
         }
         $hall_detail['cover'] = $data;
         $comment = new CommentModel();
@@ -853,8 +857,12 @@ class PublicController extends ApiBaseController
         $article_id = $request['article_id'];
         $information_detail = $articleModel->where('id', $article_id)->find();
         $information_detail['cover'] = json_decode($information_detail['cover']);
-        foreach ($information_detail['cover'] as $key => $item){
-            $data[$key] = $this->request->domain() . '/upload/'. $item;
+        if(!empty($information_detail['cover'])){
+            foreach ($information_detail['cover'] as $key => $item){
+                $data[$key] = $this->request->domain() . '/upload/'. $item;
+            }
+        }else{
+            $data = '';
         }
         $information_detail['cover'] = $data;
         $comment = new CommentModel();
@@ -862,13 +870,6 @@ class PublicController extends ApiBaseController
         $information_detail['comment_count'] = $comment_count;
         $this->success('成功', $information_detail);
     }
-
-    //点击工作咨询分类进入详情
-//    public function information_type_search(ArticleModel $articleModel, $id)
-//    {
-//        $information_type_search = $articleModel->where('hall_type_id', $id)->select();
-//        $this->success('成功',$information_type_search);
-//    }
 
     //    文化机构列表
     public function group_list()
@@ -884,11 +885,17 @@ class PublicController extends ApiBaseController
         $volunteerList = $volunteer->where('type', '志愿者')->select();
         $this->success('成功', $volunteerList);
     }
-    //    评论列表
-    public function comment()
+    //    查看文章评论
+    public function look_comment(CommentModel $commentModel)
     {
-        $volunteer = new ArticleModel();
-        $volunteerList = $volunteer->where('type', '志愿者')->select();
-        $this->success('成功', $volunteerList);
+        $user = new UserModel();
+        $article_id = $this->request->param('article_id');
+        $comment_list = $commentModel->where('article_id', $article_id)->select();
+        foreach ($comment_list as $item){
+            $user_info = $user->where('id', $item['user_id'])->find();
+            $item['nick_name'] = $user_info['nick_name'];
+            $item['avatar'] = $user_info['avatar'];
+        }
+        $this->success('成功', $comment_list);
     }
 }

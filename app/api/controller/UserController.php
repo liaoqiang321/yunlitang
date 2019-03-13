@@ -447,9 +447,4 @@ class UserController extends ApiBaseController
             $this->success('添加成功');
         }
     }
-    //获取对应文章的评论
-    public function get_comment()
-    {
-
-    }
 }

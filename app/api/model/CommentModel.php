@@ -16,6 +16,7 @@ class CommentModel extends Model
 //        return $results;
 //    }
 
+//获取文章的评论数量
     public function comment_count($article_id)
     {
         $comment = new CommentModel();
