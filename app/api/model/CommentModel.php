@@ -19,7 +19,7 @@ class CommentModel extends Model
     public function comment_count($article_id)
     {
         $comment = new CommentModel();
-        $comment_count = $comment->where('user_id', cmf_get_current_user_id())->where('article_id', $article_id)->count();
+        $comment_count = $comment->where('article_id', $article_id)->count();
         return $comment_count;
     }
 

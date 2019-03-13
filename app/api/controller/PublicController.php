@@ -4,6 +4,7 @@ namespace app\api\controller;
 use app\admin\model\ArticleModel;
 use app\admin\model\HallTypeModel;
 use app\admin\model\InformationTypeModel;
+use app\api\model\CommentModel;
 use think\Request;
 use think\Validate;
 use think\Cache;
@@ -700,7 +701,11 @@ class PublicController extends ApiBaseController
         $default_type_id = $hall_type_list[0]['id'];
         $hallList = $hall->where('hall_type_id', $default_type_id)->where('type', '礼堂')->select();
         foreach($hallList as $value){
-            $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+            if(!empty($value['cover'])){
+                $value['cover'] = json_decode($value['cover']);
+                $value['cover'] = $value['cover'][0];
+                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+            }
         }
         $this->success('成功', ['default_hall_list' => $hallList, 'hall_type_list' => $hall_type_list]);
     }
@@ -716,7 +721,22 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功',['default_hall_list' => $hall_type_search]);
     }
-    
+    //点击礼堂进入详情
+    public function hall_detail(ArticleModel $articleModel)
+    {
+        $request = $this->request->param();
+        $article_id = $request['article_id'];
+        $hall_detail = $articleModel->where('id', $article_id)->find();
+        $hall_detail['cover'] = json_decode($hall_detail['cover']);
+        foreach ($hall_detail['cover'] as $key => $item){
+                $data[$key] = $this->request->domain() . '/upload/'. $item;
+        }
+        $hall_detail['cover'] = $data;
+        $comment = new CommentModel();
+        $comment_count = $comment->comment_count($article_id);
+        $hall_detail['comment_count'] = $comment_count;
+        $this->success('成功', $hall_detail);
+    }
 //    //    礼堂列表
 //    public function hall_list()
 //    {
@@ -788,6 +808,13 @@ class PublicController extends ApiBaseController
         array_unshift($information_type_list, $arr2);
         array_unshift($information_type_list, $arr1);
         $informationList = $information->where('type', '礼堂')->order('create_time', 'desc')->select();
+        foreach($informationList as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = json_decode($value['cover']);
+                $value['cover'] = $value['cover'][0];
+                $value['cover'] = $this->request->domain() . '/upload/'. $value['cover'];
+            }
+        }
         $this->success('成功', ['default_hall_list' => $informationList, 'hall_type_list' => $information_type_list]);
     }
     //点击资讯分类进行筛选
@@ -818,6 +845,22 @@ class PublicController extends ApiBaseController
         $hall_type_search = $articleModel->where('type', '资讯')->where('title', 'like', '%'.$keyword.'%')->select();
 //            return $articleModel->getLastSql();
         $this->success('成功',$hall_type_search);
+    }
+    //点击资讯进入详情
+    public function information_detail(ArticleModel $articleModel)
+    {
+        $request = $this->request->param();
+        $article_id = $request['article_id'];
+        $information_detail = $articleModel->where('id', $article_id)->find();
+        $information_detail['cover'] = json_decode($information_detail['cover']);
+        foreach ($information_detail['cover'] as $key => $item){
+            $data[$key] = $this->request->domain() . '/upload/'. $item;
+        }
+        $information_detail['cover'] = $data;
+        $comment = new CommentModel();
+        $comment_count = $comment->comment_count($article_id);
+        $information_detail['comment_count'] = $comment_count;
+        $this->success('成功', $information_detail);
     }
 
     //点击工作咨询分类进入详情

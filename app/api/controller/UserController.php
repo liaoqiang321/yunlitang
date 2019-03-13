@@ -23,7 +23,7 @@ class UserController extends ApiBaseController
     {
         $user = new UserModel();
         $userinfo = $user->where('id', $this->userId)->select();
-        $this->success("获取成功!", $userinfo);
+        $this->success("获取成功!", $userinfo[0]);
     }
     //修改用户信息
     public function set_user_info()

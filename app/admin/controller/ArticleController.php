@@ -62,12 +62,13 @@ class ArticleController extends AdminBaseController
     {
         if ($this->request->isPost()) {
             $data   = $this->request->param();
+//            return $data;
             $resules['title'] = $data['title'];
             $resules['abstract'] = $data['abstract'];
             $resules['type'] = $data['type'];
             $resules['hall_type_id'] = $data['hall_type_id'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
-            $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $resules['cover'] = isset($data['cover']) ? json_encode($data['cover']) : '';
             $resules['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $hall->data($resules);
