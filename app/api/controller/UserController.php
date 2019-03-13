@@ -1,6 +1,7 @@
 <?php
 namespace app\api\controller;
 
+use app\api\model\CommentModel;
 use think\Db;
 use app\api\model\UserModel;
 use app\api\model\GxzhMoneyLogModel;
@@ -20,9 +21,8 @@ class UserController extends ApiBaseController
     //获取用户信息
     public function get_user_info()
     {
-        $id = $this->request->param('id');
         $user = new UserModel();
-        $userinfo = $user->where('id', $id)->select();
+        $userinfo = $user->where('id', $this->userId)->select();
         $this->success("获取成功!", $userinfo);
     }
     //修改用户信息
@@ -33,7 +33,7 @@ class UserController extends ApiBaseController
         $user->save([
             'name'  => isset($request['name']) ? $request['name'] : '',
             'nick_name' => isset($request['nick_name']) ? $request['nick_name'] : ''
-        ],['id' => $request['id']]);
+        ],['id' => $this->userId]);
         $this->success("更改成功!");
     }
     public function logout()
@@ -406,26 +406,26 @@ class UserController extends ApiBaseController
         }
         $this->success("成功!");
     }
-    public function comment()
-    {
-        //评价列表
-        $data = $this->request->param();
-        $where = [
-            'uid' => $data['uid'],
-        ];
-        $page = 1;
-        if (isset($data['page']) && intval($data['page'])>0){
-            $page = intval($data['page']);
-        }
-        $list = Db::name("gxzh_comment")->field('id as comment_id,from_uid,star,content,created_at')->where($where)->order('id DESC')->page($page.',10')->select()
-                ->each(function ($item, $key) {
-                    $item['from'] = Db::name("user")->where(['id'=>$item['from_uid']])->value('user_nickname');
-                    $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
-                    return $item;
-                });
-
-        $this->success("成功!", $list);
-    }
+//    public function comment()
+//    {
+//        //评价列表
+//        $data = $this->request->param();
+//        $where = [
+//            'uid' => $data['uid'],
+//        ];
+//        $page = 1;
+//        if (isset($data['page']) && intval($data['page'])>0){
+//            $page = intval($data['page']);
+//        }
+//        $list = Db::name("gxzh_comment")->field('id as comment_id,from_uid,star,content,created_at')->where($where)->order('id DESC')->page($page.',10')->select()
+//                ->each(function ($item, $key) {
+//                    $item['from'] = Db::name("user")->where(['id'=>$item['from_uid']])->value('user_nickname');
+//                    $item['created_at'] = date('Y-m-d H:i:s', $item['created_at']);
+//                    return $item;
+//                });
+//
+//        $this->success("成功!", $list);
+//    }
     public function withdraw_account()
     {
         $withdraw_account = Db::name("gxzh_withdraw")->where(['uid'=>$this->userId])->order('id DESC')->find();
@@ -434,5 +434,22 @@ class UserController extends ApiBaseController
             $data = ['withdraw_realname'=>$withdraw_account['withdraw_realname'],'withdraw_account'=>$withdraw_account['withdraw_account']];
         }
         $this->success("成功!",$data);
+    }
+    //发表评论
+    public function set_comment(CommentModel $commentModel)
+    {
+        $request = $this->request->param();
+        $commentModel->content = isset($request['content']) ? $request['content'] : '';
+        $commentModel->user_id = $this->userId;
+        $commentModel->article_id = $request['article_id'];
+        $result = $commentModel->save();
+        if ($result){
+            $this->success('添加成功');
+        }
+    }
+    //获取对应文章的评论
+    public function get_comment()
+    {
+
     }
 }

@@ -191,8 +191,10 @@ class PublicController extends ApiBaseController
         if (empty($result)) {
             $this->error("登录失败!");
         }
-        $userinfo = $this->UserModel->userInfo($findUser['id']);
-        $this->success("登录成功!", ['token' => $this->newToken,'user' => $userinfo]);
+//        $userinfo = $this->UserModel->userInfo($findUser['id']);
+        $user = new UserModel();
+        $userinfo = $user->where('id', $findUser['id'])->select();
+        $this->success("登录成功!", ['token' => $this->newToken, 'user' => $userinfo[0]]);
     }
     public function resetpwd()
     {
@@ -714,6 +716,7 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功',['default_hall_list' => $hall_type_search]);
     }
+    
 //    //    礼堂列表
 //    public function hall_list()
 //    {

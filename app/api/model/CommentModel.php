@@ -5,9 +5,9 @@ use app\admin\model\ArticleModel;
 use think\Db;
 use think\Model;
 
-class UserModel extends Model
+class CommentModel extends Model
 {
-    protected $table = 'cmf_ylt_user';
+    protected $table = 'cmf_ylt_comment';
     protected $autoWriteTimestamp = true;
 //    public function hallList()
 //    {
@@ -15,6 +15,13 @@ class UserModel extends Model
 //        $results = $hall->where('type', '礼堂')->select();
 //        return $results;
 //    }
+
+    public function comment_count($article_id)
+    {
+        $comment = new CommentModel();
+        $comment_count = $comment->where('user_id', cmf_get_current_user_id())->where('article_id', $article_id)->count();
+        return $comment_count;
+    }
 
     public function userInfo($id)
     {
