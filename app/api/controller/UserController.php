@@ -17,15 +17,24 @@ class UserController extends ApiBaseController
         $this->UserModel = new UserModel();
         $this->GxzhMoneyLogModel = new GxzhMoneyLogModel();
     }
-    public function getUserInfo()
+    //获取用户信息
+    public function get_user_info()
     {
-        $data = $this->request->param();
-        if (isset($data['uid'])) {
-            $userinfo = $this->UserModel->specialistInfo($data['uid']);
-        } else {
-            $userinfo = $this->UserModel->userInfo($this->userId);
-        }
-        $this->success("请求成功!", ['user' => $userinfo]);
+        $id = $this->request->param('id');
+        $user = new UserModel();
+        $userinfo = $user->where('id', $id)->select();
+        $this->success("获取成功!", $userinfo);
+    }
+    //修改用户信息
+    public function set_user_info()
+    {
+        $request = $this->request->param();
+        $user = new UserModel();
+        $user->save([
+            'name'  => isset($request['name']) ? $request['name'] : '',
+            'nick_name' => isset($request['nick_name']) ? $request['nick_name'] : ''
+        ],['id' => $request['id']]);
+        $this->success("更改成功!");
     }
     public function logout()
     {

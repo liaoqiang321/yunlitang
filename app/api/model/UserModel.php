@@ -7,12 +7,13 @@ use think\Model;
 
 class UserModel extends Model
 {
-    public function hallList()
-    {
-        $hall = new ArticleModel();
-        $results = $hall->where('type', '礼堂')->select();
-        return $results;
-    }
+    protected $table = 'cmf_ylt_user';
+//    public function hallList()
+//    {
+//        $hall = new ArticleModel();
+//        $results = $hall->where('type', '礼堂')->select();
+//        return $results;
+//    }
 
     public function userInfo($id)
     {
@@ -42,7 +43,7 @@ class UserModel extends Model
         //$userinfo['max'] = $user_info['max'];
         //$userinfo['min'] = $user_info['min'];
         $userinfo['good_at'] = $user_info['good_at'];//擅长
-        
+
         $userinfo['auth_identity'] = $user_info['auth_identity'];
         $userinfo['auth_title'] = $user_info['auth_title'];
         $userinfo['auth_work'] = $user_info['auth_work'];
@@ -63,7 +64,7 @@ class UserModel extends Model
         $userinfo['other2_pic2'] = $user_info['other2_pic2']?request()->domain().$user_info['other2_pic2'] : '';
 
         $userinfo['user_status'] = $user_info['user_status'];
-        
+
         //服务
         $userinfo['service'] = [];
         foreach($services as $k=>$v){
@@ -86,39 +87,39 @@ class UserModel extends Model
         }
         return $userinfo;
     }
-    public function specialistInfo($id)
-    {
-        $userinfo = $this->userInfo($id);
-        unset($userinfo['idcard']);
-        unset($userinfo['idcard_pic1']);
-        unset($userinfo['idcard_pic2']);
-        //unset($userinfo['work_year']);
-        unset($userinfo['title_pic1']);
-        unset($userinfo['title_pic2']);
-        //unset($userinfo['other1']);
-        unset($userinfo['other1_pic1']);
-        unset($userinfo['other1_pic2']);
-        //unset($userinfo['other2']);
-        unset($userinfo['other2_pic1']);
-        unset($userinfo['other2_pic2']);
+//    public function specialistInfo($id)
+//    {
+//        $userinfo = $this->userInfo($id);
+//        unset($userinfo['idcard']);
+//        unset($userinfo['idcard_pic1']);
+//        unset($userinfo['idcard_pic2']);
+//        //unset($userinfo['work_year']);
+//        unset($userinfo['title_pic1']);
+//        unset($userinfo['title_pic2']);
+//        //unset($userinfo['other1']);
+//        unset($userinfo['other1_pic1']);
+//        unset($userinfo['other1_pic2']);
+//        //unset($userinfo['other2']);
+//        unset($userinfo['other2_pic1']);
+//        unset($userinfo['other2_pic2']);
+//
+//        $userinfo['answer_count'] = Db::name("gxzh_answer")->where(['doctor_uid'=>$id,'status'=>2,'pay_status'=>1])->count();
+//
+//        return $userinfo;
+//    }
 
-        $userinfo['answer_count'] = Db::name("gxzh_answer")->where(['doctor_uid'=>$id,'status'=>2,'pay_status'=>1])->count();
-
-        return $userinfo;
-    }
-
-    public function userList($where = [],$order = [],$page = 1){
-        $list = Db::name("user")->field('id as uid,avatar,user_nickname,dept1,level,star,organization,good_at,max,min,auth_identity,auth_title,auth_work,auth_other1,auth_other2,other1,other2')->where($where)->orderRaw($order)->page($page.',10')->select()
-                ->each(function ($item, $key) {
-                    $item['avatar'] = $item['avatar']?request()->domain().'/'.$item['avatar'] : request()->domain().get_config('avatar');
-                    $item['dept1'] = getdeptnamebyids($item['dept1']);
-                    $item['level'] = getlevelbyid($item['level']);
-                    //$item['price'] = intval($item['min']) .'-'. intval($item['max']);
-                    //$item['count'] = Db::name("gxzh_answer")->where(['doctor_uid'=>$item['uid'],'status'=>2,'pay_status'=>1])->count();
-                    $item['price'] = getservice($item['uid']);
-                    return $item;
-                });
-        //echo Db::name("user")->getLastSql();die;
-        return $list;
-    }
+//    public function userList($where = [],$order = [],$page = 1){
+//        $list = Db::name("user")->field('id as uid,avatar,user_nickname,dept1,level,star,organization,good_at,max,min,auth_identity,auth_title,auth_work,auth_other1,auth_other2,other1,other2')->where($where)->orderRaw($order)->page($page.',10')->select()
+//                ->each(function ($item, $key) {
+//                    $item['avatar'] = $item['avatar']?request()->domain().'/'.$item['avatar'] : request()->domain().get_config('avatar');
+//                    $item['dept1'] = getdeptnamebyids($item['dept1']);
+//                    $item['level'] = getlevelbyid($item['level']);
+//                    //$item['price'] = intval($item['min']) .'-'. intval($item['max']);
+//                    //$item['count'] = Db::name("gxzh_answer")->where(['doctor_uid'=>$item['uid'],'status'=>2,'pay_status'=>1])->count();
+//                    $item['price'] = getservice($item['uid']);
+//                    return $item;
+//                });
+//        //echo Db::name("user")->getLastSql();die;
+//        return $list;
+//    }
 }

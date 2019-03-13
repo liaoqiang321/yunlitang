@@ -809,6 +809,13 @@ class PublicController extends ApiBaseController
         array_unshift($information_type_list, $arr1);
         $this->success('成功', ['default_hall_list' => $default_hall_list, 'hall_type_list' => $information_type_list]);
     }
+    //工作咨询分类模糊搜索
+    public function information_search(ArticleModel $articleModel, $keyword)
+    {
+        $hall_type_search = $articleModel->where('type', '资讯')->where('title', 'like', '%'.$keyword.'%')->select();
+//            return $articleModel->getLastSql();
+        $this->success('成功',$hall_type_search);
+    }
 
     //点击工作咨询分类进入详情
 //    public function information_type_search(ArticleModel $articleModel, $id)
@@ -831,8 +838,8 @@ class PublicController extends ApiBaseController
         $volunteerList = $volunteer->where('type', '志愿者')->select();
         $this->success('成功', $volunteerList);
     }
-    //    志愿者列表
-    public function apportionment_record()
+    //    评论列表
+    public function comment()
     {
         $volunteer = new ArticleModel();
         $volunteerList = $volunteer->where('type', '志愿者')->select();

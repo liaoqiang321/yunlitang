@@ -112,9 +112,9 @@ class ApiBaseController
             ->find();
             //echo Db::getLastSql();die;
         if (!empty($user)) {
-            if($user['user_status']==0){
-                $this->error('您已被拉黑!');
-            }
+//            if($user['user_status']==0){
+//                $this->error('您已被拉黑!');
+//            }
             $this->user     = $user;
             $this->userId   = $user['id'];
         }
