@@ -465,4 +465,68 @@ class UserController extends ApiBaseController
         }
 
     }
+    //上传随手拍详情封面
+    public function camera_cover()
+    {
+        $request = $this->request->param();
+        $user = new UserModel();
+        $user->camera_cover = $request['camera_cover'] ?: '';
+        $result = $user->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->error('失败');
+        }
+    }
+    //个人中心我的随手拍
+    public function my_camera()
+    {
+        $user = new UserModel();
+        $comment = new CommentModel();
+        $camera = new ArticleModel();
+            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('user_id', $this->userId)->where('type', '随手拍')->select();
+        if(!empty($camera_list)){
+            foreach ($camera_list as $temp => $item){
+                //加入评论数
+                $comment_count = $comment->comment_count($item['id']);
+                $item['comment_count'] = $comment_count;
+                //处理随手拍里的图片
+                $item['cover'] = json_decode($item['cover']);
+                if (!empty($item['cover'])){
+                    foreach ($item['cover'] as $key => $value){
+                        $data[$key] = $this->request->domain() . '/upload/'. $value;
+                    }
+                    $camera_list[$temp]['cover'] = $data;
+                }
+            }
+        }else{
+            $camera_list = '';
+        }
+        $camera_list = $user->get_comment_user($camera_list);
+        $this->success('成功',$camera_list);
+    }
+    //个人中心我的评论
+    public function my_comment()
+    {
+        $commentModel = new CommentModel();
+        $article = new ArticleModel;
+        $user = new UserModel();
+        $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $this->userId)->select();
+        foreach ($comment_list as $key => $comment) {
+            if (!empty($comment)) {
+                $article = $article->where('id', $comment['article_id'])->find();
+                $user = $user->find($this->userId);
+                $data[$key]['article_id'] = $comment['article_id'];
+                $data[$key]['nick_name'] = $user['nick_name'] ?: '';
+                $data[$key]['avatar'] = $user['avatar'] ?: '';
+                $data[$key]['comment'] = $comment['content'] ?: '';
+                $data[$key]['create_time'] = $comment['create_time'] ?: '';
+                $data[$key]['type'] = $article['type'];
+                $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+            }
+        }
+        $comment_list = $data;
+
+        $this->success('成功', $comment_list);
+    }
 }
