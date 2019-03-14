@@ -1,6 +1,7 @@
 <?php
 namespace app\api\controller;
 
+use app\admin\model\ArticleModel;
 use app\api\model\CommentModel;
 use think\Db;
 use app\api\model\UserModel;
@@ -446,5 +447,22 @@ class UserController extends ApiBaseController
         if ($result){
             $this->success('添加成功');
         }
+    }
+    //发表随手拍
+    public function publish_camera(ArticleModel $articleModel)
+    {
+        $request = $this->request->param();
+
+        $articleModel->type = '随手拍';
+        $articleModel->user_id =$this->userId;
+        $articleModel->content = isset($request['content']) ? $request['content'] : '';
+        $articleModel->cover = isset($request['cover']) ? json_encode($request['cover'], JSON_UNESCAPED_SLASHES) : '';
+        $result = $articleModel->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->success('失败');
+        }
+
     }
 }

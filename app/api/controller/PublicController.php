@@ -915,7 +915,7 @@ class PublicController extends ApiBaseController
     {
         $user = new UserModel();
         $article_id = $this->request->param('article_id');
-        $comment_list = $commentModel->where('article_id', $article_id)->select();
+        $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
         $comment_list = $user->get_comment_user($comment_list);
         $this->success('成功', $comment_list);
     }
@@ -923,8 +923,26 @@ class PublicController extends ApiBaseController
     public function camera_list()
     {
         $user = new UserModel();
+        $comment = new CommentModel();
         $camera = new ArticleModel();
-        $camera_list = $camera->field('id, title, cover, content create_time')->where('type', '随手拍')->select();
+        $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('type', '随手拍')->select();
+        if(!empty($camera_list)){
+            foreach ($camera_list as $temp => $item){
+                //加入评论数
+                $comment_count = $comment->comment_count($item['id']);
+                $item['comment_count'] = $comment_count;
+                //处理随手拍里的图片
+                $item['cover'] = json_decode($item['cover']);
+                if (!empty($item['cover'])){
+                    foreach ($item['cover'] as $key => $value){
+                        $data[$key] = $this->request->domain() . '/upload/'. $value;
+                    }
+                    $camera_list[$temp]['cover'] = $data;
+                }
+            }
+        }else{
+            $camera_list = '';
+        }
         $camera_list = $user->get_comment_user($camera_list);
         $this->success('成功',$camera_list);
     }
