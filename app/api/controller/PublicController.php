@@ -911,22 +911,17 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功', $volunteerList);
     }
-    //    查看文章评论(判断如果参数包含：user_id，则查询指定用户的所有评论)
+    //    查看文章评论
     public function look_comment(CommentModel $commentModel)
     {
         $user = new UserModel();
         $article_id = $this->request->param('article_id');
-        $user_id = $this->request->param('user_id');
-        if ($user_id){
-            $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $user_id)->select();
-        }else{
-            $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
-        }
-
+        $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
         $comment_list = $user->get_comment_user($comment_list);
+
         $this->success('成功', $comment_list);
     }
-    //随手拍列表（如果传入user_id则查询的是“他的随手拍”，否则返回所有随手拍列表）
+    //随手拍他的随手拍（如果传入user_id则查询的是“他的随手拍”，否则返回所有随手拍列表）
     public function camera_list()
     {
         $user = new UserModel();
@@ -958,7 +953,7 @@ class PublicController extends ApiBaseController
         $camera_list = $user->get_comment_user($camera_list);
         $this->success('成功',$camera_list);
     }
-//查看指定用户的随手拍个人信息
+//随手拍个人信息
     public function camera_user()
     {
         $camera = new ArticleModel();
@@ -972,7 +967,36 @@ class PublicController extends ApiBaseController
         $comment_count =$comment->where('user_id', $camera_user_id)->count();
         $data['camera_count'] = $camera_count;
         $data['comment_count'] = $comment_count;
-        return $this->success('成功', $data);
+        $data['user_id'] = $camera_user_id;
+        $this->success('成功', $data);
+    }
+    //随手拍他的评论
+    public function user_comment()
+    {
+        $commentModel = new CommentModel();
+        $article = new ArticleModel;
+        $user = new UserModel();
+        $user_id = $this->request->param('user_id');
+        if ($user_id) {
+            $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $user_id)->select();
+            foreach ($comment_list as $key => $comment) {
+                if (!empty($comment)) {
+                    $article = $article->where('id', $comment['article_id'])->find();
+                    $user = $user->find($user_id);
+                    $data[$key]['article_id'] = $comment['article_id'];
+                    $data[$key]['nick_name'] = $user['nick_name'] ?: '';
+                    $data[$key]['avatar'] = $user['avatar'] ?: '';
+                    $data[$key]['comment'] = $comment['content'] ?: '';
+                    $data[$key]['create_time'] = $comment['create_time'] ?: '';
+                    $data[$key]['type'] = $article['type'];
+                    $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+                }
+            }
+            $comment_list = $data;
+        }else{
+            $comment_list = '';
+        }
+        $this->success('成功', $comment_list);
     }
 
 }
