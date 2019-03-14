@@ -2,6 +2,7 @@
 namespace app\api\controller;
 
 use app\admin\model\ArticleModel;
+use app\admin\model\CameraModel;
 use app\admin\model\HallTypeModel;
 use app\admin\model\InformationTypeModel;
 use app\api\model\CommentModel;
@@ -910,22 +911,33 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功', $volunteerList);
     }
-    //    查看文章评论
+    //    查看文章评论(判断如果参数包含：user_id，则查询指定用户的所有评论)
     public function look_comment(CommentModel $commentModel)
     {
         $user = new UserModel();
         $article_id = $this->request->param('article_id');
-        $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
+        $user_id = $this->request->param('user_id');
+        if ($user_id){
+            $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $user_id)->select();
+        }else{
+            $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
+        }
+
         $comment_list = $user->get_comment_user($comment_list);
         $this->success('成功', $comment_list);
     }
-    //随手拍列表
+    //随手拍列表（如果传入user_id则查询的是“他的随手拍”，否则返回所有随手拍列表）
     public function camera_list()
     {
         $user = new UserModel();
         $comment = new CommentModel();
         $camera = new ArticleModel();
-        $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('type', '随手拍')->select();
+        $camera_user_id = $this->request->param('user_id');
+        if($camera_user_id){
+            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
+        }else{
+            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('type', '随手拍')->select();
+        }
         if(!empty($camera_list)){
             foreach ($camera_list as $temp => $item){
                 //加入评论数
@@ -946,4 +958,21 @@ class PublicController extends ApiBaseController
         $camera_list = $user->get_comment_user($camera_list);
         $this->success('成功',$camera_list);
     }
+//查看指定用户的随手拍个人信息
+    public function camera_user()
+    {
+        $camera = new ArticleModel();
+        $comment = new CommentModel();
+        $camera_user_id = $this->request->param('user_id');
+        $user = UserModel::find($camera_user_id);
+        $data['account'] = $user['account'];
+        $data['avatar'] = $user['avatar'];
+        $data['nick_name'] = $user['nick_name'];
+        $camera_count =$camera->where('user_id', $camera_user_id)->where('type', '随手拍')->count();
+        $comment_count =$comment->where('user_id', $camera_user_id)->count();
+        $data['camera_count'] = $camera_count;
+        $data['comment_count'] = $comment_count;
+        return $this->success('成功', $data);
+    }
+
 }
