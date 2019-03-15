@@ -6,6 +6,7 @@ use app\admin\model\CameraModel;
 use app\admin\model\HallTypeModel;
 use app\admin\model\InformationTypeModel;
 use app\api\model\CommentModel;
+use app\api\model\PraiseModel;
 use think\Request;
 use think\Validate;
 use think\Cache;
@@ -22,6 +23,7 @@ class PublicController extends ApiBaseController
     {
         $this->newToken = md5(uniqid()) . md5(time());
         $this->UserModel = new UserModel();
+        $this->praiseModel = new PraiseModel();
     }
     public function push()
     {
@@ -737,9 +739,13 @@ class PublicController extends ApiBaseController
             $data = '';
         }
         $hall_detail['cover'] = $data;
+        //加入评论数
         $comment = new CommentModel();
         $comment_count = $comment->comment_count($article_id);
         $hall_detail['comment_count'] = $comment_count;
+        //加入点赞数
+        $praise_count = $this->praiseModel->praise_count($article_id);
+        $hall_detail['praise_count'] = $praise_count;
         $this->success('成功', $hall_detail);
     }
 //    //    礼堂列表

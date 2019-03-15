@@ -3,6 +3,7 @@ namespace app\api\controller;
 
 use app\admin\model\ArticleModel;
 use app\api\model\CommentModel;
+use app\api\model\PraiseModel;
 use think\Db;
 use app\api\model\UserModel;
 use app\api\model\GxzhMoneyLogModel;
@@ -528,5 +529,18 @@ class UserController extends ApiBaseController
         $comment_list = $data;
 
         $this->success('成功', $comment_list);
+    }
+    //点赞入库
+    public function set_praise(PraiseModel $praiseModel)
+    {
+        $request = $this->request->param();
+        $praiseModel->user_id = $this->userId;
+        $praiseModel->article_id = $request['article_id'] ?: '';
+        $result = $praiseModel->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->error('失败');
+        }
     }
 }
