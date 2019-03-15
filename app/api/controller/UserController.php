@@ -1,7 +1,9 @@
 <?php
 namespace app\api\controller;
 
+use app\admin\model\AppointmentModel;
 use app\admin\model\ArticleModel;
+use app\admin\model\HallModel;
 use app\api\model\CommentModel;
 use app\api\model\PraiseModel;
 use think\Db;
@@ -598,6 +600,17 @@ class UserController extends ApiBaseController
         $request = $this->request->param('article_id');
         $content = $request['content'] ?: '';
         $cover = $request['cover'][0] ? json_encode($request['cover']) : '';
+    }
+    //资源预约
+    public function resource_appointment()
+    {
+        $article = new ArticleModel();
+        $appointment = new AppointmentModel();
+        $hall_count = $article->where('user_id', $this->userId)->where('type', '礼堂')->count();
+        $group = $article->where('user_id', $this->userId)->where('type', '机构团体')->count();
+        $volunteer = $article->where('user_id', $this->userId)->where('type', '志愿者')->count();
+        $appointment_count = $appointment->where('user_id', $this->userId)->count();
+        $this->success('成功', ['hall_count' => $hall_count, 'group' => $group, 'volunteer' => $volunteer, 'appointment_count' => $appointment_count]);
     }
 
 }
