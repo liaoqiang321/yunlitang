@@ -890,6 +890,9 @@ class PublicController extends ApiBaseController
         $comment = new CommentModel();
         $comment_count = $comment->comment_count($article_id);
         $information_detail['comment_count'] = $comment_count;
+        //加入点赞数
+        $praise_count = $this->praiseModel->praise_count($article_id);
+        $information_detail['praise_count'] = $praise_count;
         $this->success('成功', $information_detail);
     }
 
@@ -944,6 +947,9 @@ class PublicController extends ApiBaseController
                 //加入评论数
                 $comment_count = $comment->comment_count($item['id']);
                 $item['comment_count'] = $comment_count;
+                //加入点赞数
+                $praise_count = $this->praiseModel->praise_count($item['id']);
+                $item['praise_count'] = $praise_count;
                 //处理随手拍里的图片
                 $item['cover'] = json_decode($item['cover']);
                 if (!empty($item['cover'])){

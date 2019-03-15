@@ -536,7 +536,23 @@ class UserController extends ApiBaseController
         $request = $this->request->param();
         $praiseModel->user_id = $this->userId;
         $praiseModel->article_id = $request['article_id'] ?: '';
-        $result = $praiseModel->save();
+
+        $praiseModel->save();
+        $article = new ArticleModel();
+        $result = $article->find($request['article_id'])->isUpdate()->save(['is_praise' => 1]);
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->error('失败');
+        }
+    }
+    //取消
+    public function cancel_praise(PraiseModel $praiseModel)
+    {
+        $request = $this->request->param();
+        $praiseModel->where('user_id', $this->userId)->where('article_id', $request['article_id'])->delete();
+        $article = new ArticleModel();
+        $result = $article->find($request['article_id'])->isUpdate()->save(['is_praise' => 0]);
         if ($result){
             $this->success('成功');
         }else{
