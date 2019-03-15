@@ -938,9 +938,9 @@ class PublicController extends ApiBaseController
         $camera = new ArticleModel();
         $camera_user_id = $this->request->param('user_id');
         if($camera_user_id){
-            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
+            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->order('create_time', 'desc')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
         }else{
-            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->select();
+            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->order('create_time', 'desc')->select();
         }
         if(!empty($camera_list)){
             foreach ($camera_list as $temp => $item){
