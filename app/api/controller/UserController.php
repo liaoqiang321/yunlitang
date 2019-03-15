@@ -342,67 +342,67 @@ class UserController extends ApiBaseController
         }
         $this->success("提交成功!等待审核");
     }
-    public function auth_qualification()
-    {
-        $data = $this->request->param();
-        $info = Db::name("user")->where(['id'=>$this->userId])->find();
-
-        $userinfo['province'] = $data['province'];
-        $userinfo['city'] = $data['city'];
-        if($info['auth_work']!=1){
-            $userinfo['organization'] = $data['organization'];
-            $userinfo['work_year'] = $data['work_year'];
-            $userinfo['auth_work'] = 2;
-        }
-        if($info['auth_title']!=1){
-            $userinfo['level'] = $data['level'];
-            (strpos($data['title_pic1'],'http')===false) ? $userinfo['title_pic1'] = $data['title_pic1'] : null;
-            (strpos($data['title_pic2'],'http')===false) ? $userinfo['title_pic2'] = $data['title_pic2'] : null;
-            $userinfo['auth_title'] = 2;
-        }
-        if($info['auth_other1']!=1){
-            $userinfo['other1'] = $data['other1'];
-            (strpos($data['other1_pic1'],'http')===false) ? $userinfo['other1_pic1'] = $data['other1_pic1'] : null;
-            (strpos($data['other1_pic2'],'http')===false) ? $userinfo['other1_pic2'] = $data['other1_pic2'] : null;
-            $userinfo['auth_other1'] = 2;
-        }
-        if($info['auth_other2']!=1){
-            $userinfo['other2'] = $data['other2'];
-            (strpos($data['other2_pic1'],'http')===false) ? $userinfo['other2_pic1'] = $data['other2_pic1'] : null;
-            (strpos($data['other2_pic2'],'http')===false) ? $userinfo['other2_pic2'] = $data['other2_pic2'] : null;
-            $userinfo['auth_other2'] = 2;
-        }
-
-        $result = Db::name("user")->where(['id'=>$this->userId])->update($userinfo);
-        if ($result===false) {
-            $this->error("失败,请重试!");
-        }
-        $this->success("提交成功!等待审核，已认证信息不可修改");
-    }
-    public function couponlist()
-    {
-        //优惠券
-        $data = $this->request->param();
-        $where = ['uid'=>$this->userId];
-        if ($data['status']) {
-            $where['status'] = 1;
-        }else{
-            $where['status'] = 0;
-        }
-        $list = Db::name("gxzh_coupon")->where($where)->select();
-        $this->success("成功!", $list);
-    }
+//    public function auth_qualification()
+//    {
+//        $data = $this->request->param();
+//        $info = Db::name("user")->where(['id'=>$this->userId])->find();
+//
+//        $userinfo['province'] = $data['province'];
+//        $userinfo['city'] = $data['city'];
+//        if($info['auth_work']!=1){
+//            $userinfo['organization'] = $data['organization'];
+//            $userinfo['work_year'] = $data['work_year'];
+//            $userinfo['auth_work'] = 2;
+//        }
+//        if($info['auth_title']!=1){
+//            $userinfo['level'] = $data['level'];
+//            (strpos($data['title_pic1'],'http')===false) ? $userinfo['title_pic1'] = $data['title_pic1'] : null;
+//            (strpos($data['title_pic2'],'http')===false) ? $userinfo['title_pic2'] = $data['title_pic2'] : null;
+//            $userinfo['auth_title'] = 2;
+//        }
+//        if($info['auth_other1']!=1){
+//            $userinfo['other1'] = $data['other1'];
+//            (strpos($data['other1_pic1'],'http')===false) ? $userinfo['other1_pic1'] = $data['other1_pic1'] : null;
+//            (strpos($data['other1_pic2'],'http')===false) ? $userinfo['other1_pic2'] = $data['other1_pic2'] : null;
+//            $userinfo['auth_other1'] = 2;
+//        }
+//        if($info['auth_other2']!=1){
+//            $userinfo['other2'] = $data['other2'];
+//            (strpos($data['other2_pic1'],'http')===false) ? $userinfo['other2_pic1'] = $data['other2_pic1'] : null;
+//            (strpos($data['other2_pic2'],'http')===false) ? $userinfo['other2_pic2'] = $data['other2_pic2'] : null;
+//            $userinfo['auth_other2'] = 2;
+//        }
+//
+//        $result = Db::name("user")->where(['id'=>$this->userId])->update($userinfo);
+//        if ($result===false) {
+//            $this->error("失败,请重试!");
+//        }
+//        $this->success("提交成功!等待审核，已认证信息不可修改");
+//    }
+//    public function couponlist()
+//    {
+//        //优惠券
+//        $data = $this->request->param();
+//        $where = ['uid'=>$this->userId];
+//        if ($data['status']) {
+//            $where['status'] = 1;
+//        }else{
+//            $where['status'] = 0;
+//        }
+//        $list = Db::name("gxzh_coupon")->where($where)->select();
+//        $this->success("成功!", $list);
+//    }
+    //修改密码
     public function changepwd()
     {
-        //修改密码
         $data = $this->request->param();
-        if ($data['new_pwd'] != $data['re_new_pwd']){
-            $this->error('两次密码不一致');
+        if ($data['new_password'] != $data['origin_password']){
+            $this->error('密码不正确');
         }
-        if (!cmf_compare_password($data['old_pwd'], $this->user['user_pass'])) {
-            $this->error("密码不正确!");
-        }
-        $result = Db::name("user")->where(['id'=>$this->userId])->update(['user_pass'=>cmf_password($data['new_pwd'])]);
+//        if (!cmf_compare_password($data['old_pwd'], $this->user['user_pass'])) {
+//            $this->error("密码不正确!");
+//        }
+        $result = Db::name("ylt_user")->where(['id'=>$this->userId])->update(['password'=>cmf_password($data['new_password'])]);
         if (empty($result)) {
             $this->error("失败,请重试!");
         }
@@ -599,4 +599,5 @@ class UserController extends ApiBaseController
         $content = $request['content'] ?: '';
         $cover = $request['cover'][0] ? json_encode($request['cover']) : '';
     }
+
 }
