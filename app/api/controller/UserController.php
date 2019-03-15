@@ -612,5 +612,28 @@ class UserController extends ApiBaseController
         $appointment_count = $appointment->where('user_id', $this->userId)->count();
         $this->success('成功', ['hall_count' => $hall_count, 'group' => $group, 'volunteer' => $volunteer, 'appointment_count' => $appointment_count]);
     }
-
+    //志愿者风采列表
+    public function volunteer()
+    {
+        $volunteer = new ArticleModel();
+        $volunteer_list = $volunteer->where('type', '志愿者')->where('user_id', $this->userId)->select();
+        foreach ($volunteer_list as $key => $item){
+            if (!empty($item['cover'])){
+                $item['cover'] = $this->request->domain() . '/upload/' . json_decode($item['cover'])[0];
+            }
+        }
+        $this->success('成功', $volunteer_list);
+    }
+    //机构团体
+    public function group()
+    {
+        $group = new ArticleModel();
+        $group_list = $group->where('type', '机构团体')->where('user_id', $this->userId)->select();
+        foreach ($group_list as $key => $item){
+            if (!empty($item['cover'])){
+                $item['cover'] = $this->request->domain() . '/upload/' . json_decode($item['cover'])[0];
+            }
+        }
+        $this->success('成功', $group_list);
+    }
 }
