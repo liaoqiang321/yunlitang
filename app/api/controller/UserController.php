@@ -459,6 +459,40 @@ class UserController extends ApiBaseController
         $articleModel->type = '随手拍';
         $articleModel->user_id =$this->userId;
         $articleModel->content = isset($request['content']) ? $request['content'] : '';
+        $file   = $this->request->file('cover');
+        $result = $file->validate([
+            'ext'  => 'jpg,jpeg,png',
+            'size' => 1024 * 1024
+        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'camera' . DIRECTORY_SEPARATOR);
+
+        if ($result) {
+            $avatarSaveName = str_replace('//', '/', str_replace('\\', '/', $result->getSaveName()));
+            $avatar         = 'camera/' . $avatarSaveName;
+            session('avatar', $avatar);
+            $result = $articleModel->save();
+            return json_encode([
+                'code' => 1,
+                "msg"  => "上传成功",
+                "data" => ['file' => $avatar],
+                "url"  => ''
+            ]);
+        } else {
+            return json_encode([
+                'code' => 0,
+                "msg"  => $file->getError(),
+                "data" => "",
+                "url"  => ''
+            ]);
+        }
+
+
+
+
+
+
+
+
+
         $articleModel->cover = isset($request['cover']) ? json_encode($request['cover'], JSON_UNESCAPED_SLASHES) : '';
         $result = $articleModel->save();
         if ($result){
@@ -635,5 +669,41 @@ class UserController extends ApiBaseController
             }
         }
         $this->success('成功', $group_list);
+    }
+    //我的预约记录
+    public function my_appointment()
+    {
+        $appointment = new AppointmentModel();
+        $appointment_list = $appointment->where('user_id', $this->userId)->select();
+        return $appointment_list;
+    }
+    //申请预约(点击‘+’号)
+    public function apply_appointment()
+    {
+        $article = new ArticleModel();
+        $hall_name = $article->field('id, title')->where('type', '礼堂')->select();
+        return $hall_name;
+    }
+    //提交礼堂预约
+    public function submit_appointment()
+    {
+        $article = new ArticleModel();
+        $appointment = new AppointmentModel();
+        $hall_name = $article->field('id, user_id, title')->where('type', '礼堂')->select();
+        $request = $this->request->param();
+        $appointment->title = $request['article_id'];
+        $appointment->hold_user = $request['hold_user'];
+        $appointment->title = $request['title'];
+        $appointment->link_man = $request['link_man'];
+        $appointment->mobile = $request['mobile'];
+        $appointment->apply_reason = $request['apply_reason'];
+        $appointment->start_time = $request['start_time'];
+        $appointment->end_time = $request['end_time'];
+        $result = $appointment->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->success('失败');
+        }
     }
 }
