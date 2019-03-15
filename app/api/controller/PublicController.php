@@ -938,9 +938,9 @@ class PublicController extends ApiBaseController
         $camera = new ArticleModel();
         $camera_user_id = $this->request->param('user_id');
         if($camera_user_id){
-            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
+            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
         }else{
-            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('type', '随手拍')->select();
+            $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->select();
         }
         if(!empty($camera_list)){
             foreach ($camera_list as $temp => $item){
@@ -1009,6 +1009,14 @@ class PublicController extends ApiBaseController
             $comment_list = '';
         }
         $this->success('成功', $comment_list);
+    }
+    //随手拍他的赞
+    public function user_praise()
+    {
+        $praise = new PraiseModel();
+        $user_id = $this->request->param('user_id');
+        $user_praise = $praise->where('user_id', $user_id)->select();
+        $this->success('成功', $user_praise);
     }
 
 }

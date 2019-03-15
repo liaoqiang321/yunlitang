@@ -469,15 +469,40 @@ class UserController extends ApiBaseController
     //上传随手拍详情封面
     public function camera_cover()
     {
-        $request = $this->request->param();
-        $user = new UserModel();
-        $user->camera_cover = $request['camera_cover'] ?: '';
-        $result = $user->save();
-        if ($result){
-            $this->success('成功');
-        }else{
-            $this->error('失败');
+        $file   = $this->request->file('file');
+        $result = $file->validate([
+            'ext'  => 'jpg,jpeg,png',
+            'size' => 1024 * 1024
+        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'camera' . DIRECTORY_SEPARATOR);
+
+        if ($result) {
+            $avatarSaveName = str_replace('//', '/', str_replace('\\', '/', $result->getSaveName()));
+            $avatar         = 'camera/' . $avatarSaveName;
+            session('avatar', $avatar);
+
+            return json_encode([
+                'code' => 1,
+                "msg"  => "上传成功",
+                "data" => ['file' => $avatar],
+                "url"  => ''
+            ]);
+        } else {
+            return json_encode([
+                'code' => 0,
+                "msg"  => $file->getError(),
+                "data" => "",
+                "url"  => ''
+            ]);
         }
+//        $request = $this->request->param();
+//        $user = new UserModel();
+//        $user->camera_cover = $request['camera_cover'] ?: '';
+//        $result = $user->save();
+//        if ($result){
+//            $this->success('成功');
+//        }else{
+//            $this->error('失败');
+//        }
     }
     //个人中心我的随手拍
     public function my_camera()
@@ -558,5 +583,20 @@ class UserController extends ApiBaseController
         }else{
             $this->error('失败');
         }
+    }
+    //个人中心我的赞
+    public function my_praise()
+    {
+        return dump(cmf_get_current_user());
+        $praise = new PraiseModel();
+        $user_praise = $praise->where('user_id', $this->userId)->select();
+        $this->success('成功', $user_praise);
+    }
+    //随手拍举报
+    public function report()
+    {
+        $request = $this->request->param('article_id');
+        $content = $request['content'] ?: '';
+        $cover = $request['cover'][0] ? json_encode($request['cover']) : '';
     }
 }
