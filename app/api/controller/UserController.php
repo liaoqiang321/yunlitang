@@ -4,6 +4,7 @@ namespace app\api\controller;
 use app\admin\model\AppointmentModel;
 use app\admin\model\ArticleModel;
 use app\admin\model\HallModel;
+use app\api\common\TimeFormat;
 use app\api\model\CommentModel;
 use app\api\model\PraiseModel;
 use app\api\model\ReportModel;
@@ -516,8 +517,10 @@ class UserController extends ApiBaseController
         $user = new UserModel();
         $comment = new CommentModel();
         $camera = new ArticleModel();
-            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->where('user_id', $this->userId)->where('type', '随手拍')->select();
+        $time_format = new TimeFormat();
+            $camera_list = $camera->field('id, user_id, title, cover, content, create_time')->order('create_time', 'desc')->where('user_id', $this->userId)->where('type', '随手拍')->select();
         if(!empty($camera_list)){
+            $camera_list = $user->get_comment_user($camera_list);
             foreach ($camera_list as $temp => $item){
                 //加入评论数
                 $comment_count = $comment->comment_count($item['id']);
@@ -531,10 +534,16 @@ class UserController extends ApiBaseController
                     $camera_list[$temp]['cover'] = $data;
                 }
             }
+            $data = [];
+            foreach ($camera_list as $key => $item){
+//                return $camera_list;
+                $item->format_time = $time_format->transTime($item->create_time);
+                $data[$item['format_time']][] = $item->toArray();
+            }
+            $camera_list = $data;
         }else{
             $camera_list = '';
         }
-        $camera_list = $user->get_comment_user($camera_list);
         $this->success('成功',$camera_list);
     }
     //个人中心我的评论

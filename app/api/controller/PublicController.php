@@ -960,6 +960,7 @@ class PublicController extends ApiBaseController
         if($camera_user_id){
             $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->order('create_time', 'desc')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
             if(!empty($camera_list)){
+                $camera_list = $user->get_comment_user($camera_list);
                 foreach ($camera_list as $temp => $item){
                     //加入评论数
                     $comment_count = $comment->comment_count($item['id']);
