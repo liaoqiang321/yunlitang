@@ -6,11 +6,13 @@ use app\admin\model\ArticleModel;
 use app\admin\model\HallModel;
 use app\api\model\CommentModel;
 use app\api\model\PraiseModel;
+use FontLib\Table\Type\name;
 use think\Db;
 use app\api\model\UserModel;
 use app\api\model\GxzhMoneyLogModel;
 use Yansongda\Pay\Pay;
 use Yansongda\Pay\Log;
+use app\api\common\UploadImg;
 
 class UserController extends ApiBaseController
 {
@@ -454,46 +456,21 @@ class UserController extends ApiBaseController
     //发表随手拍
     public function publish_camera(ArticleModel $articleModel)
     {
+        $uploadImg = new UploadImg();
         $request = $this->request->param();
 
         $articleModel->type = '随手拍';
         $articleModel->user_id =$this->userId;
         $articleModel->content = isset($request['content']) ? $request['content'] : '';
-        $file   = $this->request->file('cover');
-        $result = $file->validate([
-            'ext'  => 'jpg,jpeg,png',
-            'size' => 1024 * 1024
-        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'camera' . DIRECTORY_SEPARATOR);
-
-        if ($result) {
-            $avatarSaveName = str_replace('//', '/', str_replace('\\', '/', $result->getSaveName()));
-            $avatar         = 'camera/' . $avatarSaveName;
-            session('avatar', $avatar);
-            $result = $articleModel->save();
-            return json_encode([
-                'code' => 1,
-                "msg"  => "上传成功",
-                "data" => ['file' => $avatar],
-                "url"  => ''
-            ]);
-        } else {
-            return json_encode([
-                'code' => 0,
-                "msg"  => $file->getError(),
-                "data" => "",
-                "url"  => ''
-            ]);
+        if (!empty($request['cover'])){
+            foreach ($request['cover'] as $item){
+                $path = $uploadImg->saveBase64Img($item['file']['src'], 'camera/');
+                $data['cover'][] = $path;
+            }
+            $articleModel['cover'] = json_encode($data['cover'], JSON_UNESCAPED_SLASHES);
+        }else{
+            $articleModel['cover'] = '';
         }
-
-
-
-
-
-
-
-
-
-        $articleModel->cover = isset($request['cover']) ? json_encode($request['cover'], JSON_UNESCAPED_SLASHES) : '';
         $result = $articleModel->save();
         if ($result){
             $this->success('成功');
@@ -674,7 +651,7 @@ class UserController extends ApiBaseController
     public function my_appointment()
     {
         $appointment = new AppointmentModel();
-        $appointment_list = $appointment->where('user_id', $this->userId)->select();
+        $appointment_list = $appointment->where('user_id', $this->userId)->order('create_time', 'desc')->select();
         return $appointment_list;
     }
     //申请预约(点击‘+’号)
@@ -691,14 +668,15 @@ class UserController extends ApiBaseController
         $appointment = new AppointmentModel();
         $hall_name = $article->field('id, user_id, title')->where('type', '礼堂')->select();
         $request = $this->request->param();
-        $appointment->title = $request['article_id'];
+        $appointment->article_id = $request['article_id'];
         $appointment->hold_user = $request['hold_user'];
-        $appointment->title = $request['title'];
+//        $appointment->title = $request['title'];
         $appointment->link_man = $request['link_man'];
         $appointment->mobile = $request['mobile'];
         $appointment->apply_reason = $request['apply_reason'];
         $appointment->start_time = $request['start_time'];
         $appointment->end_time = $request['end_time'];
+        $appointment->user_id = $this->userId;
         $result = $appointment->save();
         if ($result){
             $this->success('成功');
