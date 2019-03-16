@@ -536,11 +536,14 @@ class UserController extends ApiBaseController
             }
             $data = [];
             foreach ($camera_list as $key => $item){
-//                return $camera_list;
                 $item->format_time = $time_format->transTime($item->create_time);
                 $data[$item['format_time']][] = $item->toArray();
             }
-            $camera_list = $data;
+            foreach ($data as $k => $v){
+                $arr[] = ['time' => $k, 'time_data' => $v];
+
+            }
+            $camera_list = $arr;
         }else{
             $camera_list = '';
         }
@@ -553,6 +556,7 @@ class UserController extends ApiBaseController
         $article = new ArticleModel;
         $user = new UserModel();
         $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $this->userId)->select();
+//        return $comment_list;
         foreach ($comment_list as $key => $comment) {
             if (!empty($comment)) {
                 $article = $article->where('id', $comment['article_id'])->find();
@@ -563,7 +567,11 @@ class UserController extends ApiBaseController
                 $data[$key]['comment'] = $comment['content'] ?: '';
                 $data[$key]['create_time'] = $comment['create_time'] ?: '';
                 $data[$key]['type'] = $article['type'];
-                $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+                $data[$key]['title'] = $article['title'];
+                $data[$key]['abstract'] = $article['abstract'];
+                $data[$key]['content'] = $article['content'];
+                $data[$key]['cover'] = json_decode($article['cover'])[0] ? $this->request->domain() . '/upload/' . json_decode($article['cover'])[0] : '';
+//                return dump($data);
             }
         }
         $comment_list = $data;
@@ -602,9 +610,36 @@ class UserController extends ApiBaseController
     //个人中心我的赞
     public function my_praise()
     {
-        return dump(cmf_get_current_user());
+        $user = new UserModel();
         $praise = new PraiseModel();
+        $time_format = new TimeFormat();
         $user_praise = $praise->where('user_id', $this->userId)->select();
+        foreach ($user_praise as $key => $praise) {
+            if (!empty($praise)) {
+                $article = $praise->where('id', $praise['article_id'])->find();
+                $user = $user->find($this->userId);
+                $data[$key]['article_id'] = $praise['article_id'];
+                $data[$key]['nick_name'] = $user['nick_name'] ?: '';
+                $data[$key]['avatar'] = $user['avatar'] ?: '';
+                $data[$key]['comment'] = $article['content'] ?: '';
+                $data[$key]['create_time'] = $praise['create_time'] ?: '';
+                $data[$key]['type'] = $article['type'];
+                $data[$key]['title'] = $article['title'];
+                $data[$key]['abstract'] = $article['abstract'];
+                $data[$key]['content'] = $article['content'];
+                $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+            }
+        }
+        $user_praise = $data;
+        $res = [];
+        foreach ($user_praise as $key => $item){
+            $item['format_time'] = $time_format->transTime($item['create_time']);
+            $res[$item['format_time']][] = $item;
+        }
+        foreach ($res as $k => $v){
+            $arr[] = ['time' => $k, 'time_data' => $v];
+        }
+        $user_praise = $arr;
         $this->success('成功', $user_praise);
     }
     //随手拍举报
@@ -612,11 +647,12 @@ class UserController extends ApiBaseController
     {
         $uploadImg = new UploadImg();
         $report = new ReportModel();
-        $request = $this->request->param('article_id');
+        $request = $this->request->param();
         $content = $request['content'] ?: '';
         $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'report/');
         $report->content = $request->content;
         $report->image = $request->path;
+        $report->article_id = $request->article_id;
         $request = $report->save();
         if ($request){
             $this->success('成功');

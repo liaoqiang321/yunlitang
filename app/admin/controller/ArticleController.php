@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\ArticleModel;
+use app\admin\model\CommentModel;
 use app\admin\model\HallTypeModel;
 use app\admin\model\InformationTypeModel;
 use cmf\controller\AdminBaseController;
@@ -144,10 +145,13 @@ class ArticleController extends AdminBaseController
      */
     public function hall_delete()
     {
+        $comment = new CommentModel();
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        if ($status) {
+        $comment = new CommentModel();
+        $result = $comment->where('article_id', $id)->delete();
+        if ($status && $result) {
             $this->success("删除成功！", url('article/hall'));
         } else {
             $this->error("删除失败！");
@@ -324,7 +328,9 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        if ($status) {
+        $comment = new CommentModel();
+        $result = $comment->where('article_id', $id)->delete();
+        if ($status && $result) {
             $this->success("删除成功！", url('article/information'));
         } else {
             $this->error("删除失败！");
@@ -470,7 +476,9 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        if ($status) {
+        $comment = new CommentModel();
+        $result = $comment->where('article_id', $id)->delete();
+        if ($status && $result) {
             $this->success("删除成功！", url('article/information'));
         } else {
             $this->error("删除失败！");
@@ -589,7 +597,9 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        if ($status) {
+        $comment = new CommentModel();
+        $result = $comment->where('article_id', $id)->delete();
+        if ($status && $result) {
             $this->success("删除成功！", url('article/volunteer'));
         } else {
             $this->error("删除失败！");
@@ -635,7 +645,9 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $cameraModel = new ArticleModel();
         $status = $cameraModel->where('id', '=', $id)->delete();
-        if ($status) {
+        $comment = new CommentModel();
+        $result = $comment->where('article_id', $id)->delete();
+        if ($status && $result) {
             $this->success("删除成功！", url('content/camera'));
         } else {
             $this->error("删除失败！");

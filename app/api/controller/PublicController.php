@@ -567,14 +567,15 @@ class PublicController extends ApiBaseController
     public function slide()
     {
         //轮播图
-        $slide = Db::name('slide_item')->field('slide_id,image,url')->where(['status'=>1])->order('list_order')->select();
+        $slide = Db::name('slide_item')->field('slide_id,image,url')->where(['status'=>1])->select();
         $list = [];
         foreach($slide as $v) {
-            $v['image'] = $this->request->domain().'/upload/'.$v['image'];
-            $list[$v['slide_id']][] = $v;
+//            $v['image'] = $this->request->domain().'/upload/'.$v['image'];
+//            $list[$v['slide_id']][] = $v;
+            $list[] = $v['image'];
         }
-        $list = array_values($list);
-        $this->success("",['slide1'=>$list[0],'slide2'=>$list[1], 'slide3'=>$list[2]]);
+//        $list = array_values($list);
+        $this->success("成功",$list);
     }
     public function aboutus()
     {
@@ -981,12 +982,17 @@ class PublicController extends ApiBaseController
                 $camera_list = '';
             }
             $data = [];
+
+
             foreach ($camera_list as $key => $item){
 //                return $camera_list;
                 $item->format_time = $time_format->transTime($item->create_time);
                 $data[$item['format_time']][] = $item->toArray();
             }
-            $camera_list = $data;
+            foreach ($data as $k => $v){
+                $arr[] = ['time' => $k, 'time_data' => $v];
+            }
+            $camera_list = $arr;
         }else{
             $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->order('create_time', 'desc')->select();
             if(!empty($camera_list)){
@@ -1050,6 +1056,9 @@ class PublicController extends ApiBaseController
                     $data[$key]['comment'] = $comment['content'] ?: '';
                     $data[$key]['create_time'] = $comment['create_time'] ?: '';
                     $data[$key]['type'] = $article['type'];
+                    $data[$key]['title'] = $article['title'];
+                    $data[$key]['abstract'] = $article['abstract'];
+                    $data[$key]['content'] = $article['content'];
                     $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
                 }
             }
@@ -1062,9 +1071,38 @@ class PublicController extends ApiBaseController
     //随手拍他的赞
     public function user_praise()
     {
+        $user = new UserModel();
         $praise = new PraiseModel();
+        $time_format = new TimeFormat();
         $user_id = $this->request->param('user_id');
         $user_praise = $praise->where('user_id', $user_id)->select();
+        foreach ($user_praise as $key => $praise) {
+            if (!empty($praise)) {
+                $article = $praise->where('id', $praise['article_id'])->find();
+                $user = $user->find($user_id);
+                $data[$key]['article_id'] = $praise['article_id'];
+                $data[$key]['nick_name'] = $user['nick_name'] ?: '';
+                $data[$key]['avatar'] = $user['avatar'] ?: '';
+                $data[$key]['comment'] = $article['content'] ?: '';
+                $data[$key]['create_time'] = $praise['create_time'] ?: '';
+                $data[$key]['type'] = $article['type'];
+                $data[$key]['title'] = $article['title'];
+                $data[$key]['abstract'] = $article['abstract'];
+                $data[$key]['content'] = $article['content'];
+                $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+            }
+        }
+        $user_praise = $data;
+        $res = [];
+        foreach ($user_praise as $key => $item){
+            $item['format_time'] = $time_format->transTime($item['create_time']);
+            $res[$item['format_time']][] = $item;
+        }
+        foreach ($res as $k => $v){
+            $arr[] = ['time' => $k, 'time_data' => $v];
+        }
+        $user_praise = $arr;
+
         $this->success('成功', $user_praise);
     }
 
