@@ -482,40 +482,32 @@ class UserController extends ApiBaseController
     //上传随手拍详情封面
     public function camera_cover()
     {
-        $file   = $this->request->file('file');
-        $result = $file->validate([
-            'ext'  => 'jpg,jpeg,png',
-            'size' => 1024 * 1024
-        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'camera' . DIRECTORY_SEPARATOR);
-
-        if ($result) {
-            $avatarSaveName = str_replace('//', '/', str_replace('\\', '/', $result->getSaveName()));
-            $avatar         = 'camera/' . $avatarSaveName;
-            session('avatar', $avatar);
-
-            return json_encode([
-                'code' => 1,
-                "msg"  => "上传成功",
-                "data" => ['file' => $avatar],
-                "url"  => ''
-            ]);
-        } else {
-            return json_encode([
-                'code' => 0,
-                "msg"  => $file->getError(),
-                "data" => "",
-                "url"  => ''
-            ]);
+        $uploadImg = new UploadImg();
+        $userModel = new UserModel();
+        $request = $this->request->param();
+        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'camera/');
+        $userModel['camera_cover'] = $path;
+        $result = $userModel->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->success('失败');
         }
-//        $request = $this->request->param();
-//        $user = new UserModel();
-//        $user->camera_cover = $request['camera_cover'] ?: '';
-//        $result = $user->save();
-//        if ($result){
-//            $this->success('成功');
-//        }else{
-//            $this->error('失败');
-//        }
+    }
+    //上传头像
+    public function avatar()
+    {
+        $uploadImg = new UploadImg();
+        $userModel = new UserModel();
+        $request = $this->request->param();
+        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
+        $userModel['avatar'] = $path;
+        $result = $userModel->save();
+        if ($result){
+            $this->success('成功');
+        }else{
+            $this->success('失败');
+        }
     }
     //个人中心我的随手拍
     public function my_camera()
