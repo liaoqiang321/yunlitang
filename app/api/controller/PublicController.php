@@ -5,6 +5,7 @@ use app\admin\model\ArticleModel;
 use app\admin\model\CameraModel;
 use app\admin\model\HallTypeModel;
 use app\admin\model\InformationTypeModel;
+use app\api\common\TimeFormat;
 use app\api\model\CommentModel;
 use app\api\model\PraiseModel;
 use think\Request;
@@ -776,6 +777,11 @@ class PublicController extends ApiBaseController
     {
         $hall_type_search = $articleModel->where('type', '礼堂')->where('title', 'like', '%'.$keyword.'%')->select();
 //            return $articleModel->getLastSql();
+        foreach($hall_type_search as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
         $this->success('成功',$hall_type_search);
     }
 
@@ -811,6 +817,19 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功',['default_hall_list' => $hall_type_search, 'hall_type_list' => $hall_type_list]);
 
+    }
+    //礼堂指数搜索
+    public function hall_ranking_search()
+    {
+        $hall = new ArticleModel();
+        $request = $this->request->param();
+        $hall_list = $hall->where('title', 'like', $request->title)->where('create_time', '>', $request->start_time)->where('create_time', '<', $request->end_time)->select();
+        foreach($hall_list as $value){
+            if(!empty($value['cover'])){
+                $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
+            }
+        }
+        $this->success('成功', $hall_list);
     }
     //    工作资讯列表
     public function information_list()
@@ -936,33 +955,62 @@ class PublicController extends ApiBaseController
         $user = new UserModel();
         $comment = new CommentModel();
         $camera = new ArticleModel();
+        $time_format = new TimeFormat();
         $camera_user_id = $this->request->param('user_id');
         if($camera_user_id){
             $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->order('create_time', 'desc')->where('user_id', $camera_user_id)->where('type', '随手拍')->select();
+            if(!empty($camera_list)){
+                foreach ($camera_list as $temp => $item){
+                    //加入评论数
+                    $comment_count = $comment->comment_count($item['id']);
+                    $item['comment_count'] = $comment_count;
+                    //加入点赞数
+                    $praise_count = $this->praiseModel->praise_count($item['id']);
+                    $item['praise_count'] = $praise_count;
+                    //处理随手拍里的图片
+                    $item['cover'] = json_decode($item['cover']);
+                    if (!empty($item['cover'])){
+                        foreach ($item['cover'] as $key => $value){
+                            $data[$key] = $this->request->domain() . '/upload/'. $value;
+                        }
+                        $camera_list[$temp]['cover'] = $data;
+                    }
+                }
+            }else{
+                $camera_list = '';
+            }
+            $data = [];
+            foreach ($camera_list as $key => $item){
+//                return $camera_list;
+                $item->format_time = $time_format->transTime($item->create_time);
+                $data[$item['format_time']][] = $item->toArray();
+            }
+            $camera_list = $data;
         }else{
             $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->order('create_time', 'desc')->select();
-        }
-        if(!empty($camera_list)){
-            foreach ($camera_list as $temp => $item){
-                //加入评论数
-                $comment_count = $comment->comment_count($item['id']);
-                $item['comment_count'] = $comment_count;
-                //加入点赞数
-                $praise_count = $this->praiseModel->praise_count($item['id']);
-                $item['praise_count'] = $praise_count;
-                //处理随手拍里的图片
-                $item['cover'] = json_decode($item['cover']);
-                if (!empty($item['cover'])){
-                    foreach ($item['cover'] as $key => $value){
-                        $data[$key] = $this->request->domain() . '/upload/'. $value;
+            if(!empty($camera_list)){
+                foreach ($camera_list as $temp => $item){
+                    //加入评论数
+                    $comment_count = $comment->comment_count($item['id']);
+                    $item['comment_count'] = $comment_count;
+                    //加入点赞数
+                    $praise_count = $this->praiseModel->praise_count($item['id']);
+                    $item['praise_count'] = $praise_count;
+                    //处理随手拍里的图片
+                    $item['cover'] = json_decode($item['cover']);
+                    if (!empty($item['cover'])){
+                        foreach ($item['cover'] as $key => $value){
+                            $data[$key] = $this->request->domain() . '/upload/'. $value;
+                        }
+                        $camera_list[$temp]['cover'] = $data;
                     }
-                    $camera_list[$temp]['cover'] = $data;
                 }
+            }else{
+                $camera_list = '';
             }
-        }else{
-            $camera_list = '';
+            $camera_list = $user->get_comment_user($camera_list);
         }
-        $camera_list = $user->get_comment_user($camera_list);
+
         $this->success('成功',$camera_list);
     }
 //随手拍个人信息

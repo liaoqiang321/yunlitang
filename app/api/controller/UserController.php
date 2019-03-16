@@ -569,7 +569,7 @@ class UserController extends ApiBaseController
 
         $praiseModel->save();
         $article = new ArticleModel();
-        $result = $article->find($request['article_id'])->isUpdate()->save(['is_praise' => 1]);
+        $result = $article->find($request['article_id'])->isUpdate(true)->save(['is_praise' => 1]);
         if ($result){
             $this->success('成功');
         }else{
@@ -644,14 +644,22 @@ class UserController extends ApiBaseController
     {
         $appointment = new AppointmentModel();
         $appointment_list = $appointment->where('user_id', $this->userId)->order('create_time', 'desc')->select();
-        return $appointment_list;
+        if ($appointment_list){
+            $this->success('成功', $appointment_list);
+        }else{
+            $this->success('失败');
+        }
     }
     //申请预约(点击‘+’号)
     public function apply_appointment()
     {
         $article = new ArticleModel();
         $hall_name = $article->field('id, title')->where('type', '礼堂')->select();
-        return $hall_name;
+        if ($hall_name){
+            $this->success('成功', $hall_name);
+        }else{
+            $this->success('失败');
+        }
     }
     //提交礼堂预约
     public function submit_appointment()
