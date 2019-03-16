@@ -6,6 +6,7 @@ use app\admin\model\ArticleModel;
 use app\admin\model\HallModel;
 use app\api\model\CommentModel;
 use app\api\model\PraiseModel;
+use app\api\model\ReportModel;
 use FontLib\Table\Type\name;
 use think\Db;
 use app\api\model\UserModel;
@@ -502,7 +503,7 @@ class UserController extends ApiBaseController
         $request = $this->request->param();
         $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
         $userModel['avatar'] = $path;
-        $result = $userModel->save();
+        $result = $userModel->where('user_id', $this->userId)->isUpdate(true)->save($userModel);
         if ($result){
             $this->success('成功');
         }else{
@@ -600,9 +601,20 @@ class UserController extends ApiBaseController
     //随手拍举报
     public function report()
     {
+        $uploadImg = new UploadImg();
+        $report = new ReportModel();
         $request = $this->request->param('article_id');
         $content = $request['content'] ?: '';
-        $cover = $request['cover'][0] ? json_encode($request['cover']) : '';
+        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'report/');
+        $report->content = $request->content;
+        $report->image = $request->path;
+        $request = $report->save();
+        if ($request){
+            $this->success('成功');
+        }else{
+            $this->success('失败');
+        }
+
     }
     //资源预约
     public function resource_appointment()
