@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\admin\common\SyncDel;
 use app\admin\model\ArticleModel;
 use app\admin\model\CommentModel;
 use app\admin\model\HallTypeModel;
@@ -149,8 +150,8 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        $comment = new CommentModel();
-        $result = $comment->where('article_id', $id)->delete();
+        $sync_del = new SyncDel();
+        $result = $sync_del->sync_del($id);
         if ($status && $result) {
             $this->success("删除成功！", url('article/hall'));
         } else {
@@ -328,8 +329,8 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        $comment = new CommentModel();
-        $result = $comment->where('article_id', $id)->delete();
+        $sync_del = new SyncDel();
+        $result = $sync_del->sync_del($id);
         if ($status && $result) {
             $this->success("删除成功！", url('article/information'));
         } else {
@@ -476,8 +477,8 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        $comment = new CommentModel();
-        $result = $comment->where('article_id', $id)->delete();
+        $sync_del = new SyncDel();
+        $result = $sync_del->sync_del($id);
         if ($status && $result) {
             $this->success("删除成功！", url('article/information'));
         } else {
@@ -597,8 +598,8 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $articleModel = new ArticleModel();
         $status = $articleModel->where('id', '=', $id)->delete();
-        $comment = new CommentModel();
-        $result = $comment->where('article_id', $id)->delete();
+        $sync_del = new SyncDel();
+        $result = $sync_del->sync_del($id);
         if ($status && $result) {
             $this->success("删除成功！", url('article/volunteer'));
         } else {
@@ -645,8 +646,8 @@ class ArticleController extends AdminBaseController
         $id = $this->request->param("id", 0, 'intval');
         $cameraModel = new ArticleModel();
         $status = $cameraModel->where('id', '=', $id)->delete();
-        $comment = new CommentModel();
-        $result = $comment->where('article_id', $id)->delete();
+        $sync_del = new SyncDel();
+        $result = $sync_del->sync_del($id);
         if ($status && $result) {
             $this->success("删除成功！", url('content/camera'));
         } else {

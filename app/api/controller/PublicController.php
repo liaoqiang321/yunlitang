@@ -785,8 +785,6 @@ class PublicController extends ApiBaseController
         }
         $this->success('成功',$hall_type_search);
     }
-
-
     // 礼堂指数排行
     public function hall_ranking()
     {
@@ -831,6 +829,20 @@ class PublicController extends ApiBaseController
             }
         }
         $this->success('成功', $hall_list);
+    }
+    //指数排名快捷搜索
+    public function fast_search()
+    {
+        $para = $this->request->param();
+        if ($para['key'] == 'all_year'){
+            $time = [
+                $start_time = date("Y-01-01", time()),
+                $end_time = date("Y-12-31", time())
+            ];
+            return dump($time);
+        }elseif ($para['key'] == 'this_quarter'){
+
+        }
     }
     //    工作资讯列表
     public function information_list()
@@ -1042,6 +1054,7 @@ class PublicController extends ApiBaseController
     {
         $commentModel = new CommentModel();
         $article = new ArticleModel;
+        $praise = new PraiseModel();
         $user = new UserModel();
         $user_id = $this->request->param('user_id');
         if ($user_id) {
@@ -1059,6 +1072,8 @@ class PublicController extends ApiBaseController
                     $data[$key]['title'] = $article['title'];
                     $data[$key]['abstract'] = $article['abstract'];
                     $data[$key]['content'] = $article['content'];
+                    $data[$key]['comment_count'] = $commentModel->comment_count($comment['article_id']);
+                    $data[$key]['praise_count'] = $praise->praise_count($comment['article_id']);
                     $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
                 }
             }
@@ -1073,12 +1088,14 @@ class PublicController extends ApiBaseController
     {
         $user = new UserModel();
         $praise = new PraiseModel();
+        $commentModel = new CommentModel();
         $time_format = new TimeFormat();
+        $article = new ArticleModel();
         $user_id = $this->request->param('user_id');
         $user_praise = $praise->where('user_id', $user_id)->select();
         foreach ($user_praise as $key => $praise) {
             if (!empty($praise)) {
-                $article = $praise->where('id', $praise['article_id'])->find();
+                $article = $article->where('id', $praise['article_id'])->find();
                 $user = $user->find($user_id);
                 $data[$key]['article_id'] = $praise['article_id'];
                 $data[$key]['nick_name'] = $user['nick_name'] ?: '';
@@ -1089,7 +1106,10 @@ class PublicController extends ApiBaseController
                 $data[$key]['title'] = $article['title'];
                 $data[$key]['abstract'] = $article['abstract'];
                 $data[$key]['content'] = $article['content'];
-                $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
+                $data[$key]['is_praise'] = $article['is_praise'];
+                $data[$key]['comment_count'] = $commentModel->comment_count($praise['article_id']);
+                $data[$key]['praise_count'] = $praise->praise_count($praise['article_id']);
+                $data[$key]['cover'] = json_decode($article['cover'])[0] ? $this->request->domain() . '/upload/' . json_decode($article['cover'])[0] : '';
             }
         }
         $user_praise = $data;

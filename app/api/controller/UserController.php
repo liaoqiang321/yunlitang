@@ -570,6 +570,8 @@ class UserController extends ApiBaseController
                 $data[$key]['title'] = $article['title'];
                 $data[$key]['abstract'] = $article['abstract'];
                 $data[$key]['content'] = $article['content'];
+                $data[$key]['comment_count'] = $commentModel->comment_count($comment['article_id']);
+                $data[$key]['praise_count'] = $comment->praise_count($comment['article_id']);
                 $data[$key]['cover'] = json_decode($article['cover'])[0] ? $this->request->domain() . '/upload/' . json_decode($article['cover'])[0] : '';
 //                return dump($data);
             }
@@ -612,11 +614,13 @@ class UserController extends ApiBaseController
     {
         $user = new UserModel();
         $praise = new PraiseModel();
+        $article = new ArticleModel();
         $time_format = new TimeFormat();
+        $commentModel = new CommentModel();
         $user_praise = $praise->where('user_id', $this->userId)->select();
         foreach ($user_praise as $key => $praise) {
             if (!empty($praise)) {
-                $article = $praise->where('id', $praise['article_id'])->find();
+                $article = $article->where('id', $praise['article_id'])->find();
                 $user = $user->find($this->userId);
                 $data[$key]['article_id'] = $praise['article_id'];
                 $data[$key]['nick_name'] = $user['nick_name'] ?: '';
@@ -627,6 +631,9 @@ class UserController extends ApiBaseController
                 $data[$key]['title'] = $article['title'];
                 $data[$key]['abstract'] = $article['abstract'];
                 $data[$key]['content'] = $article['content'];
+                $data[$key]['is_praise'] = $article['is_praise'];
+                $data[$key]['comment_count'] = $commentModel->comment_count($praise['article_id']);
+                $data[$key]['praise_count'] = $praise->praise_count($praise['article_id']);
                 $data[$key]['cover'] = $this->request->domain() . '/upload/' . json_decode($article['cover'])[0];
             }
         }
@@ -725,9 +732,10 @@ class UserController extends ApiBaseController
         $appointment = new AppointmentModel();
         $hall_name = $article->field('id, user_id, title')->where('type', '礼堂')->select();
         $request = $this->request->param();
+        $article_title = $article->where('id', $request['article_id'])->find();
+        $appointment->title = $article_title->title;
         $appointment->article_id = $request['article_id'];
         $appointment->hold_user = $request['hold_user'];
-//        $appointment->title = $request['title'];
         $appointment->link_man = $request['link_man'];
         $appointment->mobile = $request['mobile'];
         $appointment->apply_reason = $request['apply_reason'];
