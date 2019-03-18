@@ -26,12 +26,12 @@ class TimeFormat
     //日期快捷搜索
     public function fast_date_search($para)
     {
-        if ($para['key'] == 'all_year'){
+        if ($para['time_type'] == 'all_year'){
             $time = [
                 $start_time = date("Y-01-01", time()),
                 $end_time = date("Y-12-31", time())
             ];
-        }elseif ($para['key'] == 'this_quarter'){
+        }elseif ($para['time_type'] == 'this_quarter'){
             if (date("m") >= 1 && date("m") <= 3){
                 $time = [
                     $start_time = date("Y-01-01", time()),
@@ -53,7 +53,7 @@ class TimeFormat
                     $end_time = date("Y-12-31", time())
                 ];
             }
-        }elseif ($para['key'] == 'last_quarter'){
+        }elseif ($para['time_type'] == 'last_quarter'){
             if (date("m") >= 1 && date("m") <= 3){
                 $time = [
                     $start_time = date('Y-10-1', strtotime('-1 year', time())),
@@ -75,16 +75,23 @@ class TimeFormat
                     $end_time = date("Y-9-31", time())
                 ];
             }
-        }elseif ($para['key'] == 'this_month'){
+        }elseif ($para['time_type'] == 'this_month'){
                 $time = [
                     $start_time = date("Y-m-01", time()),
                     $end_time = date("Y-m-31", time())
                 ];
-        }elseif ($para['key'] == 'last_month'){
-            $time = [
-                $start_time = date("Y-m-01", strtotime('-1 month', time())),
-                $end_time = date("Y-m-31", strtotime('-1 month', time()))
-            ];
+        }elseif ($para['time_type'] == 'last_month'){
+            if (date("m", time()) == 1){
+                $time = [
+                    $start_time = date("Y-12-01", strtotime('-1 year', time())),
+                    $end_time = date("Y-12-31", strtotime('-1 year', time()))
+                ];
+            }else{
+                $time = [
+                    $start_time = date("Y-m-01", strtotime('-1 month', time())),
+                    $end_time = date("Y-m-31", strtotime('-1 month', time()))
+                ];
+            }
         }
         return $time;
     }
