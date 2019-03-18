@@ -511,6 +511,16 @@ class UserController extends ApiBaseController
             $this->success('失败');
         }
     }
+    //个人中心首页
+    public function user_center()
+    {
+        $user = UserModel::where('id', $this->userId)->find();
+        $avatar = $this->request->domain() . '/upload/'. $user['avatar'];
+        $comment_count = CommentModel::where('user_id', $this->userId)->count();
+        $praise_count = PraiseModel::where('user_id', $this->userId)->count();
+        $camera_count = ArticleModel::where('user_id', $this->userId)->where('type', '随手拍')->count();
+        $this->success('成功', ['avatar' => $avatar, 'camera_count' => $camera_count, 'comment_count' => $comment_count, 'praise_count' => $praise_count]);
+    }
     //个人中心我的随手拍
     public function my_camera()
     {
