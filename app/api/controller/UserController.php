@@ -555,8 +555,8 @@ class UserController extends ApiBaseController
         $commentModel = new CommentModel();
         $article = new ArticleModel;
         $user = new UserModel();
+        $praise = new PraiseModel();
         $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $this->userId)->select();
-//        return $comment_list;
         foreach ($comment_list as $key => $comment) {
             if (!empty($comment)) {
                 $article = $article->where('id', $comment['article_id'])->find();
@@ -571,9 +571,8 @@ class UserController extends ApiBaseController
                 $data[$key]['abstract'] = $article['abstract'];
                 $data[$key]['content'] = $article['content'];
                 $data[$key]['comment_count'] = $commentModel->comment_count($comment['article_id']);
-                $data[$key]['praise_count'] = $comment->praise_count($comment['article_id']);
+                $data[$key]['praise_count'] = $praise->praise_count($comment['article_id']);
                 $data[$key]['cover'] = json_decode($article['cover'])[0] ? $this->request->domain() . '/upload/' . json_decode($article['cover'])[0] : '';
-//                return dump($data);
             }
         }
         $comment_list = $data;

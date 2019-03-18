@@ -833,16 +833,10 @@ class PublicController extends ApiBaseController
     //指数排名快捷搜索
     public function fast_search()
     {
+        $time_format = new TimeFormat();
         $para = $this->request->param();
-        if ($para['key'] == 'all_year'){
-            $time = [
-                $start_time = date("Y-01-01", time()),
-                $end_time = date("Y-12-31", time())
-            ];
-            return dump($time);
-        }elseif ($para['key'] == 'this_quarter'){
-
-        }
+        $result = $time_format->fast_date_search($para);
+        $this->success('成功', $result);
     }
     //    工作资讯列表
     public function information_list()
