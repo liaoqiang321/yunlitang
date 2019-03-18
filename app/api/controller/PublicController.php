@@ -819,7 +819,7 @@ class PublicController extends ApiBaseController
     {
         $hall = new ArticleModel();
         $request = $this->request->param();
-        $hall_list = $hall->where('title', 'like', '%'. $request['keyword'] . '%')->where('create_time', '>', strtotime($request['start_time']))->where('create_time', '<', strtotime($request['end_time']))->select();
+        $hall_list = $hall->where('title', 'like', '%'. $request['keyword'] . '%')->where('type', '礼堂')->where('create_time', '>', strtotime($request['start_time']))->where('create_time', '<', strtotime($request['end_time']))->select();
         foreach($hall_list as $value){
             if(!empty($value['cover'])){
                 $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
@@ -950,7 +950,6 @@ class PublicController extends ApiBaseController
         $article_id = $this->request->param('article_id');
         $comment_list = $commentModel->order('create_time', 'desc')->where('article_id', $article_id)->select();
         $comment_list = $user->get_comment_user($comment_list);
-
         $this->success('成功', $comment_list);
     }
     //随手拍他的随手拍（如果传入user_id则查询的是“他的随手拍”，否则返回所有随手拍列表）

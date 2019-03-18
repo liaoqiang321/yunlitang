@@ -3,7 +3,7 @@ namespace app\api\common;
 
 class UploadImg
 {
-    public function saveBase64Img($base64string, $savePath, $old_img = '', $img_name = '', $allowType = 'jpg,bmp,gif,png', $maxSize = 2048, $type = '')
+    public function saveBase64Img($base64string, $savePath, $old_img = '', $img_name = '', $allowType = 'jpg,bmp,gif,png', $maxSize = 3072, $type = '')
     {
         if (empty($base64string)) {
             return 'EMPTY';
