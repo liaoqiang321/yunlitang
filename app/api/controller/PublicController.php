@@ -570,11 +570,8 @@ class PublicController extends ApiBaseController
         $slide = Db::name('slide_item')->field('slide_id,image,url')->where(['status'=>1])->select();
         $list = [];
         foreach($slide as $v) {
-//            $v['image'] = $this->request->domain().'/upload/'.$v['image'];
-//            $list[$v['slide_id']][] = $v;
-            $list[] = $v['image'];
+            $list[] = $this->request->domain() . '/upload/' . $v['image'];
         }
-//        $list = array_values($list);
         $this->success("成功",$list);
     }
     public function aboutus()
@@ -822,7 +819,7 @@ class PublicController extends ApiBaseController
     {
         $hall = new ArticleModel();
         $request = $this->request->param();
-        $hall_list = $hall->where('title', 'like', $request->title)->where('create_time', '>', $request->start_time)->where('create_time', '<', $request->end_time)->select();
+        $hall_list = $hall->where('title', 'like', '%'. $request['keyword'] . '%')->where('create_time', '>', strtotime($request['start_time']))->where('create_time', '<', strtotime($request['end_time']))->select();
         foreach($hall_list as $value){
             if(!empty($value['cover'])){
                 $value['cover'] = $this->request->domain() . '/upload/'. json_decode($value['cover'])[0];
