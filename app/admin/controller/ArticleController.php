@@ -66,14 +66,12 @@ class ArticleController extends AdminBaseController
     {
         if ($this->request->isPost()) {
             $data   = $this->request->param();
-//            return isset($data['cover']);
             $results['title'] = $data['title'];
             $results['abstract'] = $data['abstract'];
             $results['type'] = $data['type'];
             $results['hall_type_id'] = $data['hall_type_id'];
             $results['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
             $results['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
-//            return $results;
             $results['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $hall->data($results);
@@ -109,13 +107,10 @@ class ArticleController extends AdminBaseController
         if ($this->request->isPost()) {
             $result['title'] = $data['title'];
             $result['abstract'] = $data['abstract'];
-//            $result['type'] = $data['type'];
             $result['hall_type_id'] = $data['hall_type_id'];
             $result['content'] = htmlspecialchars_decode($data['content']);
             $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
             $result['video'] = $data['post']['more']['video'];
-//            $result['create_time'] = $data['create_time'];
-//            $result['update_time'] = $data['update_time'];
             $hall = new ArticleModel();
             $results = $hall->isUpdate(true)->save($result, ['id' => $data['id']]);
             if ($results) {

@@ -550,13 +550,13 @@ class PublicController extends ApiBaseController
             } elseif (!empty($openid)) {
                 $this->error("该用户已绑定过微信账号!");
             }
-        } elseif ($type == 'mobile') {
+        } elseif ($data['type'] == 'mobile') {
             $user = Db::name('ylt_user')->where(['mobile'=>$data['mobile']])->find();
             if (empty($user)) {
                 $this->error("新注册可以发送验证码!");
             }
             $this->success("该手机号已注册!");
-        } elseif ($type == 'password') {
+        } elseif ($data['type'] == 'password') {
             $user = Db::name('ylt_user')->where(['mobile'=>$data['mobile']])->find();
             if (empty($user)) {
                 $this->error("该账号不存在!");
@@ -991,6 +991,7 @@ class PublicController extends ApiBaseController
                 $item->format_time = $time_format->transTime($item->create_time);
                 $data[$item['format_time']][] = $item->toArray();
             }
+            $arr = [];
             foreach ($data as $k => $v){
                 $arr[] = ['time' => $k, 'time_data' => $v];
             }
