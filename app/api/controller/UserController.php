@@ -75,9 +75,9 @@ class UserController extends ApiBaseController
             }
             $request = $this->request->param();
             $user = new UserModel();
-            if ($request['type'] = 'avatar'){
+            if ($request['type'] == 'avatar'){
                 $user->save(['avatar' => $path], ['id' => $this->userId]);
-            }elseif ($request['type'] = 'camera_cover'){
+            }elseif ($request['type'] == 'camera_cover'){
                 $user->save(['camera_cover' => $path], ['id' => $this->userId]);
             }
             $this->success("成功!",['path'=>$path,'url'=>$this->request->domain().$path]);
@@ -560,6 +560,9 @@ class UserController extends ApiBaseController
 
             }
             $camera_list = $arr;
+            $camera_cover = $user->where('id', $this->userId)->value('camera_cover');
+            $camera_cover = $this->request->domain() . $camera_cover;
+            $camera_list = ['camera_cover' => $camera_cover, 'camera_data' => $camera_list];
         }else{
             $camera_list = '';
         }

@@ -996,6 +996,9 @@ class PublicController extends ApiBaseController
                 $arr[] = ['time' => $k, 'time_data' => $v];
             }
             $camera_list = $arr;
+            $camera_cover = $user->where('id', $camera_user_id)->value('camera_cover');
+            $camera_cover = $this->request->domain() . $camera_cover;
+            $camera_list = ['camera_cover' => $camera_cover, 'camera_data' => $camera_list];
         }else{
             $camera_list = $camera->field('id, user_id, title, is_praise, cover, content, create_time')->where('type', '随手拍')->order('create_time', 'desc')->select();
             if(!empty($camera_list)){
