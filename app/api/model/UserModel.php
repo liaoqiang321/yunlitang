@@ -15,7 +15,7 @@ class UserModel extends Model
         foreach ($list as $item){
             $user_info = $this->where('id', $item['user_id'])->find();
             $item['nick_name'] = $user_info['nick_name'];
-            $item['avatar'] = $user_info['avatar'];
+            $item['avatar'] = cmf_get_domain() . $user_info['avatar'];
             $item['camera_user_id'] = $user_info['id'];
         }
         return $list;
