@@ -109,7 +109,7 @@ class ArticleController extends AdminBaseController
             $result['abstract'] = $data['abstract'];
             $result['hall_type_id'] = $data['hall_type_id'];
             $result['content'] = htmlspecialchars_decode($data['content']);
-            $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $result['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
             $result['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $results = $hall->isUpdate(true)->save($result, ['id' => $data['id']]);
@@ -254,7 +254,7 @@ class ArticleController extends AdminBaseController
             $resules['type'] = $data['type'];
             $resules['information_type_id'] = $data['information_type_id'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
-            $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $resules['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $resules['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $hall->data($resules);
@@ -288,11 +288,12 @@ class ArticleController extends AdminBaseController
     {
         $data = $this->request->param();
         if ($this->request->isPost()) {
+//            return dump($data);
             $result['title'] = $data['title'];
             $result['abstract'] = $data['abstract'];
-            $result['information_type'] = $data['information_type'];
+            $result['information_type_id'] = $data['information_type'];
             $result['content'] = htmlspecialchars_decode($data['content']);
-            $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $result['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $result['video'] = $data['post']['more']['video'];
 //            $result['create_time'] = $data['create_time'];
 //            $result['update_time'] = $data['update_time'];
@@ -408,7 +409,7 @@ class ArticleController extends AdminBaseController
             $resules['abstract'] = $data['abstract'];
             $resules['type'] = $data['type'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
-            $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $resules['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $resules['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $hall->data($resules);
@@ -442,7 +443,7 @@ class ArticleController extends AdminBaseController
             $result['title'] = $data['title'];
             $result['abstract'] = $data['abstract'];
             $result['content'] = htmlspecialchars_decode($data['content']);
-            $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $result['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $result['video'] = $data['post']['more']['video'];
 //            $result['create_time'] = $data['create_time'];
 //            $result['update_time'] = $data['update_time'];
@@ -531,7 +532,7 @@ class ArticleController extends AdminBaseController
             $resules['abstract'] = $data['abstract'];
             $resules['type'] = $data['type'];
             $resules['content'] = isset($data['content']) ? htmlspecialchars_decode($data['content']) : '';
-            $resules['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $resules['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $resules['video'] = $data['post']['more']['video'];
             $hall = new ArticleModel();
             $hall->data($resules);
@@ -565,7 +566,7 @@ class ArticleController extends AdminBaseController
             $result['title'] = $data['title'];
             $result['abstract'] = $data['abstract'];
             $result['content'] = htmlspecialchars_decode($data['content']);
-            $result['cover'] = isset($data['cover']) ? $data['cover'][0] : '';
+            $result['cover'] = isset($data['cover']) ? json_encode($data['cover'], JSON_UNESCAPED_SLASHES) : '';
 //            $result['video'] = $data['post']['more']['video'];
 //            $result['create_time'] = $data['create_time'];
 //            $result['update_time'] = $data['update_time'];
