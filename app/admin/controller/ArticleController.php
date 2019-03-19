@@ -154,7 +154,7 @@ class ArticleController extends AdminBaseController
         $status = $articleModel->where('id', '=', $id)->delete();
         $sync_del = new SyncDel();
         $result = $sync_del->sync_del($id);
-        if ($status && $result) {
+        if ($status) {
             $this->success("删除成功！", url('article/hall'));
         } else {
             $this->error("删除失败！");
@@ -335,7 +335,7 @@ class ArticleController extends AdminBaseController
         $status = $articleModel->where('id', '=', $id)->delete();
         $sync_del = new SyncDel();
         $result = $sync_del->sync_del($id);
-        if ($status && $result) {
+        if ($status) {
             $this->success("删除成功！", url('article/information'));
         } else {
             $this->error("删除失败！");
@@ -485,7 +485,7 @@ class ArticleController extends AdminBaseController
         $status = $articleModel->where('id', '=', $id)->delete();
         $sync_del = new SyncDel();
         $result = $sync_del->sync_del($id);
-        if ($status && $result) {
+        if ($status) {
             $this->success("删除成功！", url('article/information'));
         } else {
             $this->error("删除失败！");
@@ -608,7 +608,7 @@ class ArticleController extends AdminBaseController
         $status = $articleModel->where('id', '=', $id)->delete();
         $sync_del = new SyncDel();
         $result = $sync_del->sync_del($id);
-        if ($status && $result) {
+        if ($status) {
             $this->success("删除成功！", url('article/volunteer'));
         } else {
             $this->error("删除失败！");
@@ -658,7 +658,7 @@ class ArticleController extends AdminBaseController
         $status = $cameraModel->where('id', '=', $id)->delete();
         $sync_del = new SyncDel();
         $result = $sync_del->sync_del($id);
-        if ($status && $result) {
+        if ($status) {
             $this->success("删除成功！", url('content/camera'));
         } else {
             $this->error("删除失败！");
