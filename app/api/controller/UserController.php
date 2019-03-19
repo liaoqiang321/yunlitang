@@ -767,4 +767,24 @@ class UserController extends ApiBaseController
             $this->success('失败');
         }
     }
+    //预约大菜单
+
+    /**
+     *
+     */
+    public function appointment_menu()
+    {
+        $appointment = new AppointmentModel;
+        $appointment = $appointment->select();
+        foreach ($appointment as $key => $item){
+            $data[$item['article_id']][] = $item;
+        }
+        $article = new ArticleModel();
+        foreach ($data as $k => $v){
+            $hall_title = $article->where('id', $k)->value('title');
+            $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
+        }
+        $appointment = $arr;
+        $this->success('成功', $appointment);
+    }
 }
