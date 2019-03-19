@@ -48,7 +48,7 @@ class AppointmentController extends AdminBaseController
             //*************************************************************提交预约后续入库代码************************************************************************************
         }
         $appointmentModel = new AppointmentModel();
-        $appointment = $appointmentModel->order('id', 'desc')->paginate('3');
+        $appointment = $appointmentModel->order('id', 'desc')->paginate('8');
         $this->assign("appointment", $appointment);
         return $this->fetch();
     }

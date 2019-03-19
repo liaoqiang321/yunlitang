@@ -24,7 +24,16 @@
 					<!--<td>{$vo.type}</td>-->
 					<td>{$vo.title}</td>
 					<td>{$vo.abstract}</td>
-					<td>{$vo.cover}</td>
+					<td>
+						<?php if(!empty($vo['cover'])) {?>
+							<?php foreach($vo['cover'] as $item){?>
+								<a href="javascript:parent.imagePreviewDialog('{$item}');">
+									<i class="fa fa-photo fa-fw"></i>
+								</a>
+							<?php }?>
+						<?php }?>
+					</td>
+
 					<td>
 						<a class="btn btn-xs btn-primary" href="{:url('article/volunteer_edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
 						<a class="btn btn-xs btn-danger js-ajax-delete" class="" href="{:url('article/volunteer_delete',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>

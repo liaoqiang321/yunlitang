@@ -10,8 +10,7 @@
 				<tr>
 					<th width="40">ID</th>
 					<th width="75">分类</th>
-					<th align="left">标题</th>
-					<th align="left">摘要</th>
+					<th align="left">内容</th>
 					<th align="left">封面</th>
 					<th width="160">{:lang('ACTIONS')}</th>
 				</tr>
@@ -21,9 +20,16 @@
 				<tr>
 					<td>{$vo.id}</td>
 					<td>{$vo.type}</td>
-					<td>{$vo.title}</td>
-					<td>{$vo.abstract}</td>
-					<td>{$vo.cover}</td>
+					<td>{$vo.content}</td>
+					<td>
+						<?php if(!empty($vo['cover'])) {?>
+						<?php foreach($vo['cover'] as $item){?>
+						<a href="javascript:parent.imagePreviewDialog('{$item}');">
+							<i class="fa fa-photo fa-fw"></i>
+						</a>
+						<?php }?>
+						<?php }?>
+					</td>
 					<td>
 						<a class="btn btn-xs btn-primary" href="{:url('article/camera_edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
 						<a class="btn btn-xs btn-danger js-ajax-delete" class="" href="{:url('article/camera_delete',array('id'=>$vo['id']))}">{:lang('DELETE')}</a>

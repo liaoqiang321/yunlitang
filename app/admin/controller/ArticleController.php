@@ -43,6 +43,8 @@ class ArticleController extends AdminBaseController
     {
         $articleModel = new ArticleModel();
         $hall = $articleModel->where('type', '=', '礼堂')->order('id', 'desc')->paginate('10');
+        $domain = $this->request->domain();
+        $hall = $articleModel->preview_img($hall, $domain);
         $this->assign("hall", $hall);
         return $this->fetch();
     }
@@ -229,6 +231,8 @@ class ArticleController extends AdminBaseController
     {
         $articleModel = new ArticleModel();
         $information = $articleModel->where('type', '=', '资讯')->order('id', 'desc')->paginate('10');
+        $domain = $this->request->domain();
+        $information = $articleModel->preview_img($information, $domain);
         $this->assign("information", $information);
         return $this->fetch();
     }
@@ -382,6 +386,8 @@ class ArticleController extends AdminBaseController
     {
         $articleModel = new ArticleModel();
         $group = $articleModel->where('type', '=', '机构团体')->order('id', 'desc')->paginate('10');
+        $domain = $this->request->domain();
+        $group = $articleModel->preview_img($group, $domain);
         $this->assign("group", $group);
         return $this->fetch();
     }
@@ -503,6 +509,8 @@ class ArticleController extends AdminBaseController
     {
         $articleModel = new ArticleModel();
         $volunteer = $articleModel->where('type', '=', '志愿者')->order('id', 'desc')->paginate('10');
+        $domain = $this->request->domain();
+        $volunteer = $articleModel->preview_img($volunteer, $domain);
         $this->assign("volunteer", $volunteer);
         return $this->fetch();
     }
@@ -624,6 +632,8 @@ class ArticleController extends AdminBaseController
     {
         $articleModel = new ArticleModel();
         $camera = $articleModel->where('type', '随手拍')->order('id', 'desc')->paginate('10');
+        $domain = $this->request->domain();
+        $camera = $articleModel->preview_img($camera, $domain);
         $this->assign("camera", $camera);
         return $this->fetch();
     }
