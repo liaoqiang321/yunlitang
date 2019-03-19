@@ -58,10 +58,10 @@ class UserController extends ApiBaseController
         $result = $file->validate([
             //'ext'  => 'jpg,jpeg,png',
             //'size' => 1024 * 1024
-        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'gxzh' . DIRECTORY_SEPARATOR);
+        ])->move(WEB_ROOT . 'upload' . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR);
         if ($result) {
             $saveName = str_replace('//', '/', str_replace('\\', '/', $result->getSaveName()));
-            $path = '/upload/gxzh/'.$saveName;
+            $path = '/upload/img/'.$saveName;
             //amr转mp3
             if($result->getExtension()=='amr'){
                 $status = null;
@@ -72,6 +72,13 @@ class UserController extends ApiBaseController
                 } else {
                     $path = $path2.'.mp3';
                 }            
+            }
+            $request = $this->request->param();
+            $user = new UserModel();
+            if ($request['type'] = 'avatar'){
+                $user->save(['avatar' => $path], ['id' => $this->userId]);
+            }elseif ($request['type'] = 'camera_cover'){
+                $user->save(['camera_cover' => $path], ['id' => $this->userId]);
             }
             $this->success("成功!",['path'=>$path,'url'=>$this->request->domain().$path]);
         } else {
@@ -480,42 +487,41 @@ class UserController extends ApiBaseController
         }else{
             $this->success('失败');
         }
-
     }
     //上传随手拍详情封面
-    public function camera_cover()
-    {
-        $uploadImg = new UploadImg();
-        $userModel = new UserModel();
-        $request = $this->request->param();
-        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'camera/');
-        $userModel['camera_cover'] = $path;
-        $result = $userModel->save();
-        if ($result){
-            $this->success('成功');
-        }else{
-            $this->success('失败');
-        }
-    }
-    //上传头像
-    public function avatar()
-    {
-        $uploadImg = new UploadImg();
-        $userModel = new UserModel();
-        $request = $this->request->param();
-        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
-        $result = $userModel->save(['avatar' => $path], ['id' => $this->userId]);
-        if ($result){
-            $this->success('成功', $this->request->domain() . '/upload/'. $path);
-        }else{
-            $this->success('失败');
-        }
-    }
+//    public function camera_cover()
+//    {
+//        $uploadImg = new UploadImg();
+//        $userModel = new UserModel();
+//        $request = $this->request->param();
+//        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'camera/');
+//        $userModel['camera_cover'] = $path;
+//        $result = $userModel->where('id', $this->userId)->save();
+//        if ($result){
+//            $this->success('成功', $this->request->domain() . '/upload/' . $path);
+//        }else{
+//            $this->success('失败');
+//        }
+//    }
+//    //上传头像
+//    public function avatar()
+//    {
+//        $uploadImg = new UploadImg();
+//        $userModel = new UserModel();
+//        $request = $this->request->param();
+//        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
+//        $result = $userModel->save(['avatar' => $path], ['id' => $this->userId]);
+//        if ($result){
+//            $this->success('成功', $this->request->domain() . '/upload/'. $path);
+//        }else{
+//            $this->success('失败');
+//        }
+//    }
     //个人中心首页
     public function user_center()
     {
         $user = UserModel::where('id', $this->userId)->find();
-        $avatar = $this->request->domain() . '/upload/'. $user['avatar'];
+        $avatar = $user['avatar'] ? $this->request->domain() . '/upload/'. $user['avatar'] : '';
         $comment_count = CommentModel::where('user_id', $this->userId)->count();
         $praise_count = PraiseModel::where('user_id', $this->userId)->count();
         $camera_count = ArticleModel::where('user_id', $this->userId)->where('type', '随手拍')->count();

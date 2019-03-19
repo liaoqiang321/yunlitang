@@ -578,7 +578,7 @@ class PublicController extends ApiBaseController
     {
         //关于我们
         $result = Db::name('ylt_info')->select();
-        $aboutus = $result['about'];
+        $aboutus = $result[0]['about'];
         $this->success("公告",$aboutus);
     }
     public function search_condition()
