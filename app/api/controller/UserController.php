@@ -402,7 +402,8 @@ class UserController extends ApiBaseController
     public function changepwd()
     {
         $data = $this->request->param();
-        if ($data['new_password'] != $data['origin_password']){
+        $user = UserModel::get($this->userId);
+        if (!cmf_compare_password($data['origin_password'], $user['password'])){
             $this->error('密码不正确');
         }
 //        if (!cmf_compare_password($data['old_pwd'], $this->user['user_pass'])) {
@@ -503,10 +504,9 @@ class UserController extends ApiBaseController
         $userModel = new UserModel();
         $request = $this->request->param();
         $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
-        $userModel['avatar'] = $path;
-        $result = $userModel->where('user_id', $this->userId)->isUpdate(true)->save($userModel);
+        $result = $userModel->save(['avatar' => $path], ['id' => $this->userId]);
         if ($result){
-            $this->success('成功');
+            $this->success('成功', $this->request->domain() . '/upload/'. $path);
         }else{
             $this->success('失败');
         }
