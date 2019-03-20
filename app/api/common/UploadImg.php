@@ -55,8 +55,8 @@ class UploadImg
             return 'MAX_SIZE';
         }
         // 检测目标文件夹是否存在
-        if (!file_exists('upload/' . $savePath)) {
-            mkdir('upload/' . $savePath);
+        if (!file_exists('upload/' . $savePath . date("Ymd", time()) . '/')) {
+            mkdir('upload/' . $savePath . date("Ymd", time()) . '/');
         }
         // 取出图片源数据
         $img = $img_arr[1];
@@ -64,7 +64,8 @@ class UploadImg
         $img = base64_decode($img);
         // 设置存储的图片名称
         if (empty($img_name)) {
-            $img_name = uniqid();
+//            $img_name = uniqid();
+            $img_name = date("Ymd", time()) . '/' . uniqid();
         }
         // 对图片重命名，并存储到指定路径
         $img_path = $savePath . $img_name . '.' . $mime_info['suffix'];

@@ -54,6 +54,7 @@ class UserController extends ApiBaseController
     }
     public function upload()
     {
+
         $file   = $this->request->file('file');
         $result = $file->validate([
             //'ext'  => 'jpg,jpeg,png',
@@ -489,39 +490,38 @@ class UserController extends ApiBaseController
         }
     }
     //上传随手拍详情封面
-//    public function camera_cover()
-//    {
-//        $uploadImg = new UploadImg();
-//        $userModel = new UserModel();
-//        $request = $this->request->param();
-//        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'camera/');
-//        $userModel['camera_cover'] = $path;
-//        $result = $userModel->where('id', $this->userId)->save();
-//        if ($result){
-//            $this->success('成功', $this->request->domain() . '/upload/' . $path);
-//        }else{
-//            $this->success('失败');
-//        }
-//    }
-//    //上传头像
-//    public function avatar()
-//    {
-//        $uploadImg = new UploadImg();
-//        $userModel = new UserModel();
-//        $request = $this->request->param();
-//        $path = $uploadImg->saveBase64Img($request['cover'][0]['file']['src'], 'avatar/');
-//        $result = $userModel->save(['avatar' => $path], ['id' => $this->userId]);
-//        if ($result){
-//            $this->success('成功', $this->request->domain() . '/upload/'. $path);
-//        }else{
-//            $this->success('失败');
-//        }
-//    }
+    public function camera_cover()
+    {
+        $uploadImg = new UploadImg();
+        $userModel = new UserModel();
+        $request = $this->request->param();
+        $path = $uploadImg->saveBase64Img($request['cover'], 'camera/');
+        $result = $userModel->save(['camera_cover' => '/upload/' . $path], ['id' => $this->userId]);
+        if ($result){
+            $this->success('成功', $this->request->domain() . '/upload/' . $path);
+        }else{
+            $this->success('失败');
+        }
+    }
+    //上传头像
+    public function avatar()
+    {
+        $uploadImg = new UploadImg();
+        $userModel = new UserModel();
+        $request = $this->request->param();
+        $path = $uploadImg->saveBase64Img($request['cover'], 'avatar/');
+        $result = $userModel->save(['avatar' => '/upload/' . $path], ['id' => $this->userId]);
+        if ($result){
+            $this->success('成功', $this->request->domain() . '/upload/'. $path);
+        }else{
+            $this->success('失败');
+        }
+    }
     //个人中心首页
     public function user_center()
     {
         $user = UserModel::where('id', $this->userId)->find();
-        $avatar = $user['avatar'] ? $this->request->domain() . '/upload/'. $user['avatar'] : '';
+        $avatar = $user['avatar'] ? $this->request->domain() . $user['avatar'] : '';
         $comment_count = CommentModel::where('user_id', $this->userId)->count();
         $praise_count = PraiseModel::where('user_id', $this->userId)->count();
         $camera_count = ArticleModel::where('user_id', $this->userId)->where('type', '随手拍')->count();
@@ -555,6 +555,7 @@ class UserController extends ApiBaseController
                 $item->format_time = $time_format->transTime($item->create_time);
                 $data[$item['format_time']][] = $item->toArray();
             }
+            $arr = [];
             foreach ($data as $k => $v){
                 $arr[] = ['time' => $k, 'time_data' => $v];
 
@@ -775,15 +776,31 @@ class UserController extends ApiBaseController
      */
     public function appointment_menu()
     {
+        $request = $this->request->param();
+        $type = isset($request['type']) ?  $request['type'] : '';
         $appointment = new AppointmentModel;
         $appointment = $appointment->select();
+        $data = [];
         foreach ($appointment as $key => $item){
             $data[$item['article_id']][] = $item;
         }
         $article = new ArticleModel();
         foreach ($data as $k => $v){
-            $hall_title = $article->where('id', $k)->value('title');
-            $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
+            //判断是不是详情
+            if ($type != 'detail'){
+                $tem = [];
+                foreach ($v as $i => $value){
+                    if ($i < 4){
+                        $tem[] = $value;
+                    }
+                }
+                $v = $tem;
+                $hall_title = $article->where('id', $k)->value('title');
+                $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
+            }else{
+                $hall_title = $article->where('id', $k)->value('title');
+                $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
+            }
         }
         $appointment = $arr;
         $this->success('成功', $appointment);
