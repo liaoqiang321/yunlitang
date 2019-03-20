@@ -795,14 +795,17 @@ class UserController extends ApiBaseController
                     }
                 }
                 $v = $tem;
-                $hall_title = $article->where('id', $k)->value('title');
-                $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
-            }else{
-                $hall_title = $article->where('id', $k)->value('title');
-                $arr[] = ['article_id' => $k, 'hall_title' => $hall_title, 'hall_list' => $v];
             }
+            $hall = $article->find($k);
+            $arr[] = [
+                'article_id' => $k,
+                'hall_title' => $hall['title'],
+                'hall_abstract' => $hall['abstract'],
+                'hall_list' => $v
+            ];
         }
         $appointment = $arr;
         $this->success('成功', $appointment);
     }
+    
 }
