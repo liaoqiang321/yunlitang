@@ -1053,6 +1053,7 @@ class PublicController extends ApiBaseController
         $user_id = $this->request->param('user_id');
         if ($user_id) {
             $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $user_id)->select();
+            $data = [];
             foreach ($comment_list as $key => $comment) {
                 if (!empty($comment)) {
                     $article = $article->where('id', $comment['article_id'])->find();
@@ -1093,7 +1094,7 @@ class PublicController extends ApiBaseController
                 $user = $user->find($user_id);
                 $data[$key]['article_id'] = $praise['article_id'];
                 $data[$key]['nick_name'] = $user['nick_name'] ?: '';
-                $data[$key]['avatar'] = $user['avatar'] ?: '';
+                $data[$key]['avatar'] = $user['avatar'] ? cmf_get_domain() . $user['avatar'] : '';
                 $data[$key]['comment'] = $article['content'] ?: '';
                 $data[$key]['create_time'] = $praise['create_time'] ?: '';
                 $data[$key]['type'] = $article['type'];

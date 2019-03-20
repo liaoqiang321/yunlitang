@@ -576,6 +576,7 @@ class UserController extends ApiBaseController
         $user = new UserModel();
         $praise = new PraiseModel();
         $comment_list = $commentModel->order('create_time', 'desc')->where('user_id', $this->userId)->select();
+        $data = [];
         foreach ($comment_list as $key => $comment) {
             if (!empty($comment)) {
                 $article = $article->where('id', $comment['article_id'])->find();
@@ -642,7 +643,7 @@ class UserController extends ApiBaseController
                 $user = $user->find($this->userId);
                 $data[$key]['article_id'] = $praise['article_id'];
                 $data[$key]['nick_name'] = $user['nick_name'] ?: '';
-                $data[$key]['avatar'] = $user['avatar'] ?: '';
+                $data[$key]['avatar'] = $user['avatar'] ? cmf_get_domain() . $user['avatar'] : '';
                 $data[$key]['comment'] = $article['content'] ?: '';
                 $data[$key]['create_time'] = $praise['create_time'] ?: '';
                 $data[$key]['type'] = $article['type'];
